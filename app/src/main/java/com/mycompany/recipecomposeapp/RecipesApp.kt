@@ -21,7 +21,7 @@ import com.mycompany.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 fun RecipesApp() {
     RecipeComposeAppTheme {
 
-        var currentScreen by remember { mutableStateOf(ScreenId.CATEGORY) }
+        var currentScreen by remember { mutableStateOf(ScreenId.CATEGORIES_LIST) }
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -32,15 +32,49 @@ fun RecipesApp() {
                 )
             }
         ) { paddingValues ->
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                Text(
-                    text = currentScreen.screenName,
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .align(Alignment.Center),
-                    fontSize = 50.sp
-                )
+
+            when (currentScreen){
+                ScreenId.FAVORITES -> Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        text = "Избранное",
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .align(Alignment.Center),
+                        fontSize = 50.sp
+                    )
+                }
+
+                ScreenId.CATEGORIES_LIST -> Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        text = "Категории",
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .align(Alignment.Center),
+                        fontSize = 50.sp
+                    )
+                }
+
+                ScreenId.SPLASH_SCREEN -> Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        text = "Экран загрузки",
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .align(Alignment.Center),
+                        fontSize = 50.sp
+                    )
+                }
+
+                ScreenId.RECIPE -> Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        text = "Рецепт",
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .align(Alignment.Center),
+                        fontSize = 50.sp
+                    )
+                }
             }
+
         }
     }
 }
