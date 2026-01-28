@@ -1,4 +1,4 @@
-package com.mycompany.recipecomposeapp.ui
+package com.mycompany.recipecomposeapp.ui.favorites
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,13 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.mycompany.recipecomposeapp.R
-
+import com.mycompany.recipecomposeapp.ui.ScreenHeader
 
 @Composable
-fun CategoriesScreen(drawableResId: Int, headerText: String) {
+fun FavoritesScreen(drawableResId: Int, headerText: String) {
 
     Column(modifier = Modifier.fillMaxWidth()) {
         ScreenHeader(
@@ -24,7 +22,7 @@ fun CategoriesScreen(drawableResId: Int, headerText: String) {
         Spacer(Modifier.weight(weight = 1f))
 
         Text(
-            text = "Список категорий",
+            text = "Избранные рецепты",
             modifier = Modifier
                 .align(Alignment.CenterHorizontally),
             fontSize = 30.sp
@@ -32,10 +30,4 @@ fun CategoriesScreen(drawableResId: Int, headerText: String) {
 
         Spacer(Modifier.weight(weight = 1f))
     }
-}
-
-@Composable
-@Preview
-fun CategoriesScreenPreview() {
-    ScreenHeader(drawableResId = R.drawable.img_categories_header, headerText = "Заголовок")
 }
