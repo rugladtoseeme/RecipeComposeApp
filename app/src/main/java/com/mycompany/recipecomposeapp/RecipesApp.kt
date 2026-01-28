@@ -1,7 +1,10 @@
 package com.mycompany.recipecomposeapp
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -14,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import com.mycompany.recipecomposeapp.ui.ScreenHeader
 import com.mycompany.recipecomposeapp.ui.navigation.BottomNavigation
 import com.mycompany.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
@@ -33,8 +37,11 @@ fun RecipesApp() {
             }
         ) { paddingValues ->
 
-            when (currentScreen){
-                ScreenId.FAVORITES -> Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+            when (currentScreen) {
+                ScreenId.FAVORITES -> Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
                     Text(
                         text = "Избранное",
                         modifier = Modifier
@@ -44,17 +51,32 @@ fun RecipesApp() {
                     )
                 }
 
-                ScreenId.CATEGORIES_LIST -> Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        text = "Категории",
-                        modifier = Modifier
-                            .padding(paddingValues)
-                            .align(Alignment.Center),
-                        fontSize = 50.sp
-                    )
+                ScreenId.CATEGORIES_LIST -> Box(modifier = Modifier.fillMaxWidth()) {
+
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                         ScreenHeader(
+                             drawableResId = R.drawable.img_categories_header,
+                             headerText = "КАТЕГОРИИ"
+                         )
+
+                         Spacer(Modifier.weight(weight = 1f))
+
+                         Text(
+                             text = "Список категорий",
+                             modifier = Modifier
+                                 .padding(paddingValues)
+                                 .align(Alignment.CenterHorizontally),
+                             fontSize = 30.sp
+                         )
+
+                        Spacer(Modifier.weight(weight = 1f))
+                     }
                 }
 
-                ScreenId.SPLASH_SCREEN -> Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                ScreenId.SPLASH_SCREEN -> Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
                     Text(
                         text = "Экран загрузки",
                         modifier = Modifier
@@ -64,7 +86,10 @@ fun RecipesApp() {
                     )
                 }
 
-                ScreenId.RECIPE -> Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                ScreenId.RECIPE -> Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
                     Text(
                         text = "Рецепт",
                         modifier = Modifier
