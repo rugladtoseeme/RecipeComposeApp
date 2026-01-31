@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
-import com.mycompany.recipecomposeapp.ui.ScreenHeader
+import com.mycompany.recipecomposeapp.ui.core.uui.ScreenHeader
 
 @Composable
 fun RecipesScreen(drawableResId: Int, headerText: String, modifier: Modifier = Modifier) {
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth()) {
         ScreenHeader(
             drawableResId,
             headerText

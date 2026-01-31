@@ -1,4 +1,4 @@
-package com.mycompany.recipecomposeapp.ui
+package com.mycompany.recipecomposeapp.ui.core.uui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -18,9 +18,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
-
 @Composable
-fun ScreenHeader(drawableResId: Int, headerText: String) {
+fun ScreenHeader(imagePainter: Int, title: String) {
 
     Box(
         modifier = Modifier
@@ -29,7 +28,7 @@ fun ScreenHeader(drawableResId: Int, headerText: String) {
     )
     {
         Image(
-            painter = painterResource(drawableResId),
+            painter = painterResource(imagePainter),
             contentDescription = "Screen header background picture.",
             modifier = Modifier
                 .fillMaxSize(),
@@ -51,7 +50,7 @@ fun ScreenHeader(drawableResId: Int, headerText: String) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = headerText,
+                    text = title,
                     style = MaterialTheme.typography.displayLarge,
                 )
             }

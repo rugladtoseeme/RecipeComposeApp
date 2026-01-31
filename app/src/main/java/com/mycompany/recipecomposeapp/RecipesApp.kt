@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.mycompany.recipecomposeapp.ui.CategoriesScreen
+import com.mycompany.recipecomposeapp.ui.categories.CategoriesScreen
 import com.mycompany.recipecomposeapp.ui.favorites.FavoritesScreen
 import com.mycompany.recipecomposeapp.ui.navigation.BottomNavigation
 import com.mycompany.recipecomposeapp.ui.recipes.RecipesScreen
@@ -44,7 +44,8 @@ fun RecipesApp() {
                 ) {
                     FavoritesScreen(
                         drawableResId = R.drawable.img_favorites_header,
-                        headerText = "ИЗБРАННОЕ"
+                        headerText = "ИЗБРАННОЕ",
+                        Modifier.padding(paddingValues)
                     )
                 }
 
@@ -52,7 +53,8 @@ fun RecipesApp() {
 
                     CategoriesScreen(
                         drawableResId = R.drawable.img_categories_header,
-                        headerText = "КАТЕГОРИИ"
+                        headerText = "КАТЕГОРИИ",
+                        modifier = Modifier.padding(paddingValues)
                     )
                 }
 
@@ -88,7 +90,8 @@ fun RecipesApp() {
                 ) {
                     RecipesScreen(
                         drawableResId = R.drawable.img_recipes_list_header,
-                        headerText = "РЕЦЕПТЫ"
+                        headerText = "РЕЦЕПТЫ",
+                        modifier = Modifier.padding(paddingValues)
                     )
                 }
             }

@@ -1,4 +1,4 @@
-package com.mycompany.recipecomposeapp.ui
+package com.mycompany.recipecomposeapp.ui.categories
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,12 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.mycompany.recipecomposeapp.R
+import com.mycompany.recipecomposeapp.ui.core.uui.ScreenHeader
 
 
 @Composable
-fun CategoriesScreen(drawableResId: Int, headerText: String) {
+fun CategoriesScreen(drawableResId: Int, headerText: String, modifier: Modifier = Modifier) {
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth()) {
         ScreenHeader(
             drawableResId,
             headerText
@@ -37,5 +38,5 @@ fun CategoriesScreen(drawableResId: Int, headerText: String) {
 @Composable
 @Preview
 fun CategoriesScreenPreview() {
-    ScreenHeader(drawableResId = R.drawable.img_categories_header, headerText = "Заголовок")
+    ScreenHeader(imagePainter = R.drawable.img_categories_header, title = "Заголовок")
 }
