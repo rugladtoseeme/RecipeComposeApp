@@ -1,4 +1,4 @@
-package com.mycompany.recipecomposeapp.ui
+package com.mycompany.recipecomposeapp.ui.core.uui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -16,21 +16,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mycompany.recipecomposeapp.R
 
 @Composable
-fun ScreenHeader(drawableResId: Int, headerText: String) {
+fun ScreenHeader(imagePainter: Int, title: String) {
 
     Box(
         modifier = Modifier
             .height(224.dp)
-           .fillMaxSize()
+            .fillMaxSize()
     )
     {
         Image(
-            painter = painterResource(drawableResId),
+            painter = painterResource(imagePainter),
             contentDescription = "Screen header background picture.",
             modifier = Modifier
                 .fillMaxSize(),
@@ -52,16 +50,10 @@ fun ScreenHeader(drawableResId: Int, headerText: String) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = headerText,
+                    text = title,
                     style = MaterialTheme.typography.displayLarge,
                 )
             }
         }
     }
-}
-
-@Composable
-@Preview
-fun CategoriesScreenPreview() {
-    ScreenHeader(drawableResId = R.drawable.img_categories_header, headerText = "Заголовок")
 }
