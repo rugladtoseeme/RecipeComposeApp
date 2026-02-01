@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
-import com.mycompany.recipecomposeapp.ui.core.uui.ScreenHeader
+import com.mycompany.recipecomposeapp.ui.core.ui.ScreenHeader
 
 @Composable
 fun FavoritesScreen(drawableResId: Int, headerText: String, modifier: Modifier = Modifier) {

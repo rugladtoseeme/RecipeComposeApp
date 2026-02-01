@@ -1,4 +1,4 @@
-package com.mycompany.recipecomposeapp.ui.core.uui
+package com.mycompany.recipecomposeapp.ui.core.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
