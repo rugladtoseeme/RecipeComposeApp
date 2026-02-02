@@ -46,7 +46,7 @@ object RecipesRepositoryStub {
         ),
     )
 
-    private val recipe = RecipeDto(
+    private val burgerRecipe = RecipeDto(
         id = 0,
         title = "Классический бургер с говядиной",
         ingredients = listOf(
@@ -123,9 +123,26 @@ object RecipesRepositoryStub {
         imageUrl = "https://images.google.com"
     )
 
+    private val burgerRecipes: List<RecipeDto> = listOf(burgerRecipe)
+    private val dessertRecipes: List<RecipeDto> = listOf()
+    private val fishRecipes: List<RecipeDto> = listOf()
+    private val pizzaRecipes: List<RecipeDto> = listOf()
+    private val saladRecipes: List<RecipeDto> = listOf()
+    private val soupRecipes: List<RecipeDto> = listOf()
+
     fun getCategories() = categories
 
-    fun getRecipesByCategoryId(id: Int) {
-        //TODO
+    fun getRecipesByCategoryId(categoryId: Int): List<RecipeDto> {
+        return when (categoryId) {
+            0 -> burgerRecipes
+            1 -> dessertRecipes
+            2 -> pizzaRecipes
+            3 -> fishRecipes
+            4 -> soupRecipes
+            5 -> saladRecipes
+
+            else -> emptyList()
+        }
     }
+
 }
