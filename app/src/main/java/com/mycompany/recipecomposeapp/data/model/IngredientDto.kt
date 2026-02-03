@@ -1,9 +1,24 @@
 package com.mycompany.recipecomposeapp.data.model
 
-sealed class Quantity {
-    data class Measured(val amount: Double, val unit: String): Quantity()
-    object ByTaste: Quantity()
-}
-data class Ingredient(val name: String, val quantity: Quantity)
+import androidx.compose.runtime.Immutable
 
-data class IngredientDto(val quantity: Quantity, val description: String)
+sealed class Quantity {
+    data class Measured(val amount: Double, val unit: String) : Quantity()
+    object ByTaste : Quantity()
+}
+
+data class IngredientDto(val name: String, val quantity: Quantity)
+
+@Immutable
+data class IngredientUiModel(
+    val title: String,
+    val amount: String,
+)
+
+fun IngredientDto.toUiModel() = IngredientUiModel(
+    title = name,
+    amount = when (quantity) {
+        is Quantity.Measured -> "${quantity.amount} ${quantity.unit}"
+        is Quantity.ByTaste -> "по вкусу"
+    }
+)
