@@ -1,3 +1,9 @@
 package com.mycompany.recipecomposeapp.data.model
 
-data class IngredientDto(val quantity: Double, val unitOfMeasure: String, val description: String)
+sealed class Quantity {
+    data class Measured(val amount: Double, val unit: String): Quantity()
+    object ByTaste: Quantity()
+}
+data class Ingredient(val name: String, val quantity: Quantity)
+
+data class IngredientDto(val quantity: Quantity, val description: String)

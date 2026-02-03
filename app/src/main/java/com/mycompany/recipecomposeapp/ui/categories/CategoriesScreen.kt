@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.mycompany.recipecomposeapp.R
-import com.mycompany.recipecomposeapp.ui.core.uui.ScreenHeader
+import com.mycompany.recipecomposeapp.ui.core.ui.ScreenHeader
 
 
 @Composable
