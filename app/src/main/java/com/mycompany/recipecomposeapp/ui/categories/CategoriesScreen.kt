@@ -35,7 +35,7 @@ fun CategoriesScreen(drawableResId: Int, headerText: String, modifier: Modifier 
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            items(categories) { category ->
+            items(categories, key = {it.id}) { category ->
                 CategoryItem(
                     onClick = {},
                     categoryUiModel = category.toUiModel()
