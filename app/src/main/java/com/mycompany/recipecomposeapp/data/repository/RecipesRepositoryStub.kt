@@ -55,49 +55,49 @@ object RecipesRepositoryStub {
                     amount = 0.5,
                     unit = "кг"
                 ),
-                description = "говяжий фарш",
+                name = "говяжий фарш",
             ),
             IngredientDto(
                 quantity = Quantity.Measured(
                     amount = 1.0,
                     unit = "шт"
                 ),
-                description = "луковица, мелко нарезанная",
+                name = "луковица, мелко нарезанная",
             ),
             IngredientDto(
                 quantity = Quantity.Measured(
                     amount = 2.0,
                     unit = "зубч"
                 ),
-                description = "чеснок, измельченный",
+                name = "чеснок, измельченный",
             ),
             IngredientDto(
                 quantity = Quantity.Measured(
                     amount = 4.0,
                     unit = "шт"
                 ),
-                description = "булочки для бургера",
+                name = "булочки для бургера",
             ),
             IngredientDto(
                 quantity = Quantity.Measured(
                     amount = 4.0,
                     unit = "шт"
                 ),
-                description = "листа салата",
+                name = "листа салата",
             ),
             IngredientDto(
                 quantity = Quantity.Measured(
                     amount = 1.0,
                     unit = "шт"
                 ),
-                description = "помидор, нарезанный кольцами",
+                name = "помидор, нарезанный кольцами",
             ),
             IngredientDto(
                 quantity = Quantity.Measured(
                     amount = 2.0,
                     unit = "ст. л."
                 ),
-                description = "горчица",
+                name = "горчица",
             ),
             IngredientDto(
 
@@ -105,11 +105,11 @@ object RecipesRepositoryStub {
                     amount = 2.0,
                     unit = "ст. л."
                 ),
-                description = "кетчуп",
+                name = "кетчуп",
             ),
             IngredientDto(
                 quantity = Quantity.ByTaste,
-                description = "соль и черный перец",
+                name = "соль и черный перец",
             ),
 
             ),
