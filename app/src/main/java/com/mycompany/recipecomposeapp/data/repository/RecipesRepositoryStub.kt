@@ -145,4 +145,8 @@ object RecipesRepositoryStub {
         }
     }
 
+    fun getCategoryById(categoryId: Int): CategoryDto {
+        return categories[categoryId]
+    }
+
 }

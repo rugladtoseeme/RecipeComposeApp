@@ -20,7 +20,12 @@ import com.mycompany.recipecomposeapp.ui.core.ui.ScreenHeader
 private val categories = RecipesRepositoryStub.getCategories()
 
 @Composable
-fun CategoriesScreen(drawableResId: Int, headerText: String, modifier: Modifier = Modifier) {
+fun CategoriesScreen(
+    onCategoryClick: (Int) -> Unit,
+    drawableResId: Int,
+    headerText: String,
+    modifier: Modifier = Modifier
+) {
 
     Column(modifier = modifier.fillMaxWidth()) {
         ScreenHeader(
@@ -37,7 +42,7 @@ fun CategoriesScreen(drawableResId: Int, headerText: String, modifier: Modifier 
 
             items(categories, key = { it.id }) { category ->
                 CategoryItem(
-                    onClick = {},
+                    onClick = { onCategoryClick(category.id) },
                     categoryUiModel = category.toUiModel()
                 )
             }

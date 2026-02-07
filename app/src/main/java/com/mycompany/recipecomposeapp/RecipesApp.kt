@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import com.mycompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.mycompany.recipecomposeapp.ui.categories.CategoriesScreen
 import com.mycompany.recipecomposeapp.ui.favorites.FavoritesScreen
 import com.mycompany.recipecomposeapp.ui.navigation.BottomNavigation
@@ -26,6 +27,17 @@ fun RecipesApp() {
     RecipeComposeAppTheme {
 
         var currentScreen by remember { mutableStateOf(ScreenId.CATEGORIES_LIST) }
+
+        var selectedCategoryId by remember { mutableStateOf<Int?>(null) }
+
+        var selectedCategoryTitle by remember { mutableStateOf("") }
+
+        val onCategoryClick: (Int) -> Unit = { categoryId ->
+            selectedCategoryId = categoryId
+            selectedCategoryTitle =
+                RecipesRepositoryStub.getCategoryById(categoryId).title.uppercase()
+            currentScreen = ScreenId.RECIPES_LIST
+        }
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -54,7 +66,8 @@ fun RecipesApp() {
                     CategoriesScreen(
                         drawableResId = R.drawable.img_categories_header,
                         headerText = "КАТЕГОРИИ",
-                        modifier = Modifier.padding(paddingValues)
+                        modifier = Modifier.padding(paddingValues),
+                        onCategoryClick = onCategoryClick
                     )
                 }
 
@@ -88,14 +101,15 @@ fun RecipesApp() {
                     contentAlignment = Alignment.Center,
                     modifier = Modifier.fillMaxSize()
                 ) {
+
                     RecipesScreen(
+                        categoryId = selectedCategoryId ?: error("Category ID is required"),
                         drawableResId = R.drawable.img_recipes_list_header,
-                        headerText = "РЕЦЕПТЫ",
-                        modifier = Modifier.padding(paddingValues)
+                        categoryTitle = selectedCategoryTitle,
+                        modifier = Modifier.padding(paddingValues),
                     )
                 }
             }
-
         }
     }
 }
