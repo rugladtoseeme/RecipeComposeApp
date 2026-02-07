@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -47,15 +48,17 @@ fun RecipesScreen(
             categoryTitle
         )
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        if (isLoading) CircularProgressIndicator()
+        else
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
 
-            items(items = recipes, key = { it.id }) { recipe ->
-                RecipeItem(recipe = recipe.toUiModel(), onRecipeClick = {})
+                items(items = recipes, key = { it.id }) { recipe ->
+                    RecipeItem(recipe = recipe.toUiModel(), onRecipeClick = {})
+                }
             }
-        }
     }
 }
