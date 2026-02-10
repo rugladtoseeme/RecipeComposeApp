@@ -21,6 +21,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mycompany.recipecomposeapp.R
 
+sealed class Destination(val route: String) {
+    object Categories : Destination("categories")
+    object Recipes : Destination("recipes/{categoryId}") {
+        fun createRoute(categoryId: Int) = "recipes/$categoryId"
+    }
+    object Favorites : Destination("favorites")
+}
+
 @Composable
 fun BottomNavigation(onCategoriesClick: () -> Unit, onFavoritesClick: () -> Unit) {
 
