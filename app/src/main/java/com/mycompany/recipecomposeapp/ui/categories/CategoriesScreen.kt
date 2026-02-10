@@ -54,5 +54,5 @@ fun CategoriesScreen(
 @Composable
 @Preview
 fun CategoriesScreenPreview() {
-    ScreenHeader(imagePainter = R.drawable.img_categories_header, title = "Заголовок")
+    ScreenHeader(imageResId = R.drawable.img_categories_header, title = "Заголовок")
 }

@@ -22,14 +22,14 @@ import com.mycompany.recipecomposeapp.data.model.RecipeUiModel
 @Composable
 fun RecipeItem(
     recipe: RecipeUiModel,
-    onRecipeClick: (Int) -> Unit,
+    onRecipeClick: (Int, RecipeUiModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
             .height(height = 132.dp)
             .fillMaxWidth()
-            .clickable(onClick = { onRecipeClick(recipe.id) }),
+            .clickable(onClick = { onRecipeClick(recipe.id, recipe) }),
         shape = RoundedCornerShape(size = 8.dp)
     ) {
         Column(verticalArrangement = Arrangement.SpaceBetween) {

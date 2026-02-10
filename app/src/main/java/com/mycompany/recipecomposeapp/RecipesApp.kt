@@ -15,13 +15,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.mycompany.recipecomposeapp.data.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.mycompany.recipecomposeapp.ui.categories.CategoriesScreen
+import com.mycompany.recipecomposeapp.ui.details.RecipeDetailsScreen
 import com.mycompany.recipecomposeapp.ui.favorites.FavoritesScreen
 import com.mycompany.recipecomposeapp.ui.navigation.BottomNavigation
 import com.mycompany.recipecomposeapp.ui.navigation.Destination
 import com.mycompany.recipecomposeapp.ui.recipes.RecipesScreen
 import com.mycompany.recipecomposeapp.ui.theme.RecipeComposeAppTheme
+
+const val KEY_RECIPE_OBJECT = "recipe"
 
 @Composable
 fun RecipesApp() {
@@ -88,6 +92,27 @@ fun RecipesApp() {
                         categoryId = categoryId,
                         categoryTitle = selectedCategoryTitle,
                         drawableResId = R.drawable.img_recipes_list_header,
+                        modifier = Modifier.padding(paddingValues),
+                        onRecipeClick = { recipeId, recipe ->
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                KEY_RECIPE_OBJECT,
+                                recipe
+                            )
+                            navController.navigate("recipe/$recipeId")
+                        }
+                    )
+                }
+
+                composable(
+                    route = Destination.Recipe.route,
+                    arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
+                ) { backStackEntry ->
+                    val recipe =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<RecipeUiModel>(
+                            KEY_RECIPE_OBJECT
+                        )
+                    RecipeDetailsScreen(
+                        recipe = recipe,
                         modifier = Modifier.padding(paddingValues)
                     )
                 }

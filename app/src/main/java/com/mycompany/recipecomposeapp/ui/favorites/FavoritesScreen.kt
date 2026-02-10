@@ -15,8 +15,8 @@ fun FavoritesScreen(drawableResId: Int, headerText: String, modifier: Modifier =
 
     Column(modifier = modifier.fillMaxWidth()) {
         ScreenHeader(
-            drawableResId,
-            headerText
+            imageResId = drawableResId,
+            title = headerText
         )
 
         Spacer(Modifier.weight(weight = 1f))
