@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +32,12 @@ fun RecipeDetailsScreen(recipe: RecipeUiModel?, modifier: Modifier = Modifier) {
                 )
             }
 
+            recipe?.ingredients?.let { ingredients ->
+                items(ingredients) { ingredient ->
+                    Text(ingredient.title, style = MaterialTheme.typography.bodySmall)
+                }
+            }
+
             item {
                 Text(
                     text = "СПОСОБ ПРИГОТОВЛЕНИЯ",
@@ -38,6 +45,12 @@ fun RecipeDetailsScreen(recipe: RecipeUiModel?, modifier: Modifier = Modifier) {
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(16.dp)
                 )
+            }
+
+            recipe?.method?.let { method ->
+                items(method) {
+                    Text(it, style = MaterialTheme.typography.bodySmall)
+                }
             }
         }
     }

@@ -30,7 +30,7 @@ sealed class Destination(val route: String) {
     object Favorites : Destination("favorites")
 
     object Recipe : Destination("recipe/{recipeId}") {
-        fun createRoute(recipeId: Int) = "recipes/$recipeId"
+        fun createRoute(recipeId: Int) = "recipe/$recipeId"
     }
 }
 
