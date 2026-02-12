@@ -26,7 +26,12 @@ sealed class Destination(val route: String) {
     object Recipes : Destination("recipes/{categoryId}") {
         fun createRoute(categoryId: Int) = "recipes/$categoryId"
     }
+
     object Favorites : Destination("favorites")
+
+    object Recipe : Destination("recipe/{recipeId}") {
+        fun createRoute(recipeId: Int) = "recipe/$recipeId"
+    }
 }
 
 @Composable
@@ -83,5 +88,5 @@ fun BottomNavigation(onCategoriesClick: () -> Unit, onFavoritesClick: () -> Unit
 @Composable
 @Preview
 fun BottomNavigationPreview() {
-    BottomNavigation({}, {})
+    BottomNavigation(onCategoriesClick = {}, onFavoritesClick = {})
 }

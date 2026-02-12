@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mycompany.recipecomposeapp.data.model.RecipeDto
+import com.mycompany.recipecomposeapp.data.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.data.model.toUiModel
 import com.mycompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.mycompany.recipecomposeapp.ui.core.ui.ScreenHeader
@@ -26,7 +27,8 @@ fun RecipesScreen(
     categoryId: Int,
     categoryTitle: String,
     drawableResId: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRecipeClick: (Int, RecipeUiModel) -> Unit
 ) {
 
     var recipes by remember { mutableStateOf(listOf<RecipeDto>()) }
@@ -44,7 +46,7 @@ fun RecipesScreen(
 
     Column(modifier = modifier.fillMaxWidth()) {
         ScreenHeader(
-            drawableResId,
+            imageResId = drawableResId,
             categoryTitle
         )
 
@@ -57,7 +59,7 @@ fun RecipesScreen(
             ) {
 
                 items(items = recipes, key = { it.id }) { recipe ->
-                    RecipeItem(recipe = recipe.toUiModel(), onRecipeClick = {})
+                    RecipeItem(recipe = recipe.toUiModel(), onRecipeClick = onRecipeClick)
                 }
             }
     }
