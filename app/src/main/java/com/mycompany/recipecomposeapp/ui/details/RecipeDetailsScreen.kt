@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -52,7 +54,11 @@ fun RecipeDetailsScreen(recipe: RecipeUiModel?, modifier: Modifier = Modifier) {
 
             item { PortionsSelector(currentPortions, { portions -> currentPortions = portions }) }
 
-            item { IngredientsList(scaledIngredients) }
+            items(items = scaledIngredients) { ingredient ->
+                IngredientItem(ingredient = ingredient, modifier = Modifier.padding(start = 12.dp))
+            }
+
+            item { Spacer(modifier = Modifier.height(16.dp)) }
 
             item {
                 Text(
@@ -81,31 +87,29 @@ fun InstructionsList(method: List<String>?) {
 }
 
 @Composable
-fun IngredientsList(ingredients: List<IngredientUiModel>) {
-    Column(modifier = Modifier.padding(12.dp)) {
-        ingredients.forEach {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
+fun IngredientItem(ingredient: IngredientUiModel, modifier: Modifier) {
 
-                Text(
-                    text = it.title.uppercase(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.width(175.dp)
-                )
+    Row(
+        modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp)
+    ) {
 
-                Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = ingredient.title.uppercase(),
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.width(175.dp)
+        )
 
-                Text(
-                    text = it.quantity.toString().uppercase(),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-        }
+        Spacer(modifier = Modifier.weight(1f))
+
+        Text(
+            text = ingredient.quantity.toString().uppercase(),
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
+
 
 @Composable
 private fun PortionsSlider(
