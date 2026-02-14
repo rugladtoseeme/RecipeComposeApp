@@ -100,7 +100,6 @@ object RecipesRepositoryStub {
                 name = "горчица",
             ),
             IngredientDto(
-
                 quantity = Quantity.Measured(
                     amount = 2.0,
                     unit = "ст. л."
