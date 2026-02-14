@@ -76,9 +76,9 @@ fun RecipeDetailsScreen(recipe: RecipeUiModel?, modifier: Modifier = Modifier) {
 @Composable
 fun InstructionsList(method: List<String>?) {
     Column(modifier = Modifier.padding(top = 16.dp)) {
-        method?.forEach { it ->
+        method?.forEachIndexed { index, step ->
             Text(
-                text = it,
+                text = "${index+1}.$step",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(12.dp)
             )
@@ -87,7 +87,7 @@ fun InstructionsList(method: List<String>?) {
 }
 
 @Composable
-fun IngredientItem(ingredient: IngredientUiModel, modifier: Modifier) {
+fun IngredientItem(ingredient: IngredientUiModel, modifier: Modifier = Modifier) {
 
     Row(
         modifier
