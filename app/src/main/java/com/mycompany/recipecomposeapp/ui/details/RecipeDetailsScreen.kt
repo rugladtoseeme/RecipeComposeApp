@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -77,15 +76,21 @@ fun RecipeHeader(
         }
 
         if (showShareButton) {
-            Button(
+            IconButton(
                 onClick = onShareClick,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(top = 16.dp, end = 60.dp)
+                    .padding(top = 12.dp, end = 60.dp)
                     .wrapContentSize(),
                 enabled = true
-            ) {
-                Text("share")
+            )
+            {
+                Icon(
+                    painter = painterResource(R.drawable.ic_share),
+                    contentDescription = "share button image",
+                    modifier = Modifier.fillMaxSize(),
+                    tint = Color.Unspecified
+                )
             }
         }
     }

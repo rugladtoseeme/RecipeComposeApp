@@ -122,11 +122,78 @@ object RecipesRepositoryStub {
         imageUrl = "https://images.google.com"
     )
 
+    private val saladRecipe = RecipeDto(
+        id = 7,
+        title = "Салат оливье",
+        ingredients = listOf(
+            IngredientDto(
+                quantity = Quantity.Measured(
+                    amount = 0.3,
+                    unit = "кг"
+                ),
+                name = "колбаса докторская",
+            ),
+            IngredientDto(
+                quantity = Quantity.Measured(
+                    amount = 0.5,
+                    unit = "шт"
+                ),
+                name = "луковица, мелко нарезанная",
+            ),
+            IngredientDto(
+                quantity = Quantity.Measured(
+                    amount = 1.0,
+                    unit = "банка"
+                ),
+                name = "горошек консервированный",
+            ),
+            IngredientDto(
+                quantity = Quantity.Measured(
+                    amount = 2.0,
+                    unit = "шт"
+                ),
+                name = "картофель отварной",
+            ),
+            IngredientDto(
+                quantity = Quantity.Measured(
+                    amount = 1.0,
+                    unit = "шт"
+                ),
+                name = "морковь отварная",
+            ),
+            IngredientDto(
+                quantity = Quantity.Measured(
+                    amount = 1.0,
+                    unit = "шт"
+                ),
+                name = "огурец соленый",
+            ),
+            IngredientDto(
+                quantity = Quantity.Measured(
+                    amount = 2.0,
+                    unit = "шт"
+                ),
+                name = "яйцо отварное",
+            ),
+            IngredientDto(
+                quantity = Quantity.ByTaste,
+                name = "майонез",
+            ),
+
+            ),
+        method = listOf(
+            "1. Нарежьте колбасу, картофель, морковь, яйцо и огурец небольими кубиками.",
+            "2. Соедините все ингредиенты в глубокой миске.",
+            "3. Заправьте салат майонезом.",
+        ),
+        imageUrl = "https://images.google.com"
+    )
+
     private val burgerRecipes: List<RecipeDto> = listOf(burgerRecipe)
     private val dessertRecipes: List<RecipeDto> = listOf()
     private val fishRecipes: List<RecipeDto> = listOf()
     private val pizzaRecipes: List<RecipeDto> = listOf()
-    private val saladRecipes: List<RecipeDto> = listOf()
+    private val saladRecipes: List<RecipeDto> = listOf(saladRecipe)
     private val soupRecipes: List<RecipeDto> = listOf()
 
     fun getCategories() = categories
@@ -149,7 +216,7 @@ object RecipesRepositoryStub {
     }
 
     fun getRecipeById(recipeId: Int): RecipeDto? {
-        return getCategories().flatMap { getRecipesByCategoryId(it.id) }[recipeId]
+        return getCategories().flatMap { getRecipesByCategoryId(it.id) }.first { it.id == recipeId }
     }
 
 }
