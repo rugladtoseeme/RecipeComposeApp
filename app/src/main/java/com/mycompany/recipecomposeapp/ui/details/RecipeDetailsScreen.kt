@@ -1,14 +1,20 @@
 package com.mycompany.recipecomposeapp.ui.details
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -16,9 +22,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
 import com.mycompany.recipecomposeapp.R
@@ -26,10 +37,71 @@ import com.mycompany.recipecomposeapp.data.model.IngredientUiModel
 import com.mycompany.recipecomposeapp.data.model.Quantity
 import com.mycompany.recipecomposeapp.data.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.ui.core.ui.ScreenHeader
+import com.mycompany.recipecomposeapp.ui.core.ui.shareRecipe
 import kotlin.math.roundToInt
 
 @Composable
+fun RecipeHeader(
+    recipe: RecipeUiModel?,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit,
+    onShareClick: () -> Unit,
+    showShareButton: Boolean = true,
+) {
+
+    Box(modifier = Modifier.fillMaxWidth()) {
+        ScreenHeader(
+            imageUrl = recipe?.imageUrl,
+            title = recipe?.title ?: "Рецепт"
+        )
+
+        IconButton(
+            onClick = onToggleFavorite,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+                .size(40.dp),
+            enabled = true
+        )
+        {
+            Icon(
+                painter = painterResource(
+                    if (isFavorite) R.drawable.ic_heart_active
+                    else R.drawable.ic_heart_empty
+                ),
+                contentDescription = "favorites button image",
+                modifier = Modifier.fillMaxSize(),
+                tint = Color.Unspecified
+            )
+        }
+
+        if (showShareButton) {
+            IconButton(
+                onClick = onShareClick,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 12.dp, end = 60.dp)
+                    .wrapContentSize(),
+                enabled = true
+            )
+            {
+                Icon(
+                    painter = painterResource(R.drawable.ic_share),
+                    contentDescription = "share button image",
+                    modifier = Modifier.fillMaxSize(),
+                    tint = Color.Unspecified
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun RecipeDetailsScreen(recipe: RecipeUiModel?, modifier: Modifier = Modifier) {
+
+    val context = LocalContext.current
+
+    var uiState by remember { mutableStateOf(recipe) }
 
     var currentPortions by remember { mutableIntStateOf(recipe?.servings ?: 1) }
 
@@ -45,9 +117,16 @@ fun RecipeDetailsScreen(recipe: RecipeUiModel?, modifier: Modifier = Modifier) {
     }
 
     Column(modifier = modifier.fillMaxWidth()) {
-        ScreenHeader(
-            imageUrl = recipe?.imageUrl,
-            title = recipe?.title ?: "РЕЦЕПТ",
+
+        RecipeHeader(
+            recipe = recipe,
+            isFavorite = uiState?.isFavorite ?: false,
+            onToggleFavorite = {
+                uiState = uiState?.copy(isFavorite = !(uiState?.isFavorite ?: false))
+            },
+            onShareClick = {
+                shareRecipe(context, recipe?.id ?: -1, recipe?.title)
+            }
         )
 
         LazyColumn(modifier = Modifier.padding(16.dp)) {
@@ -78,7 +157,7 @@ fun InstructionsList(method: List<String>?) {
     Column(modifier = Modifier.padding(top = 16.dp)) {
         method?.forEachIndexed { index, step ->
             Text(
-                text = "${index+1}.$step",
+                text = "${index + 1}.$step",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(12.dp)
             )
