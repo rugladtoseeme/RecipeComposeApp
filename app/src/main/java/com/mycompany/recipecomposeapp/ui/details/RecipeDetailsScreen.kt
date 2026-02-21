@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,15 +24,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.mycompany.recipecomposeapp.R
 import com.mycompany.recipecomposeapp.data.model.IngredientUiModel
@@ -40,11 +44,6 @@ import com.mycompany.recipecomposeapp.data.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.ui.core.ui.ScreenHeader
 import com.mycompany.recipecomposeapp.ui.core.ui.shareRecipe
 import kotlin.math.roundToInt
-import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.vectorResource
 
 @Composable
 fun RecipeHeader(
@@ -53,6 +52,7 @@ fun RecipeHeader(
     onToggleFavorite: () -> Unit,
     onShareClick: () -> Unit,
     showShareButton: Boolean = true,
+    showFavoriteButton: Boolean = true,
 ) {
 
     Box(modifier = Modifier.fillMaxWidth()) {
@@ -61,33 +61,35 @@ fun RecipeHeader(
             title = recipe?.title ?: "Рецепт"
         )
 
-        IconButton(
-            onClick = onToggleFavorite,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
-                .size(40.dp),
-            enabled = true
-        )
-        {
+        if (showFavoriteButton) {
+            IconButton(
+                onClick = onToggleFavorite,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+                    .size(40.dp),
+                enabled = true
+            )
+            {
 
-            Crossfade(
-                targetState = isFavorite,
-                animationSpec = tween(durationMillis = 300),
-                label = "favorite_animation"
-            ) { isCurrentlyFavorite ->
-                val heartIcon = rememberVectorPainter(
-                    image = ImageVector.vectorResource(
-                        id = if (isCurrentlyFavorite) R.drawable.ic_heart_active else R.drawable.ic_heart_empty
+                Crossfade(
+                    targetState = isFavorite,
+                    animationSpec = tween(durationMillis = 300),
+                    label = "favorite_animation"
+                ) { isCurrentlyFavorite ->
+                    val heartIcon = rememberVectorPainter(
+                        image = ImageVector.vectorResource(
+                            id = if (isCurrentlyFavorite) R.drawable.ic_heart_active else R.drawable.ic_heart_empty
+                        )
                     )
-                )
 
-                Icon(
-                    painter = heartIcon,
-                    contentDescription = "Favorite",
-                    modifier = Modifier.fillMaxSize(),
-                    tint = Color.Unspecified
-                )
+                    Icon(
+                        painter = heartIcon,
+                        contentDescription = "Favorite",
+                        modifier = Modifier.fillMaxSize(),
+                        tint = Color.Unspecified
+                    )
+                }
             }
         }
 
@@ -120,11 +122,14 @@ private fun adjustIngredient(ingredient: IngredientUiModel, multiplier: Float): 
     )
 
 @Composable
-fun RecipeDetailsScreen(recipe: RecipeUiModel?, modifier: Modifier = Modifier) {
+fun RecipeDetailsScreen(
+    recipe: RecipeUiModel?,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit,
+    modifier: Modifier = Modifier
+) {
 
     val context = LocalContext.current
-
-    var isFavorite by rememberSaveable { mutableStateOf(recipe?.isFavorite ?: false) }
 
     var currentPortions by rememberSaveable { mutableIntStateOf(recipe?.servings ?: 1) }
 
@@ -140,9 +145,8 @@ fun RecipeDetailsScreen(recipe: RecipeUiModel?, modifier: Modifier = Modifier) {
         RecipeHeader(
             recipe = recipe,
             isFavorite = isFavorite,
-            onToggleFavorite = {
-                isFavorite = !isFavorite
-            },
+            onToggleFavorite = onToggleFavorite,
+            showFavoriteButton = true,
             onShareClick = {
                 shareRecipe(context, recipe?.id ?: -1, recipe?.title)
             }

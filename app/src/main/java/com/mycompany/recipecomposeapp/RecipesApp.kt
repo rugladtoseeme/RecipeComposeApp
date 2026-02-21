@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,9 +34,12 @@ const val KEY_RECIPE_OBJECT = "recipe"
 
 @Composable
 fun RecipesApp(deepLinkIntent: Intent?) {
+
     RecipeComposeAppTheme {
 
         var selectedCategoryTitle by remember { mutableStateOf("") }
+
+        var isFavorite by rememberSaveable { mutableStateOf(false)}
 
         val navController = rememberNavController()
 
@@ -82,6 +86,7 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                 navController = navController,
                 startDestination = "categories"
             ) {
+
                 composable(route = "categories") {
                     CategoriesScreen(
                         onCategoryClick = { categoryId ->
@@ -133,9 +138,14 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                         navController.previousBackStackEntry?.savedStateHandle?.get<RecipeUiModel>(
                             KEY_RECIPE_OBJECT
                         )
+
                     RecipeDetailsScreen(
                         recipe = recipe,
-                        modifier = Modifier.padding(paddingValues)
+                        modifier = Modifier.padding(paddingValues),
+                        isFavorite = isFavorite,
+                        onToggleFavorite = {
+                            isFavorite = !isFavorite
+                        },
                     )
                 }
 
@@ -149,7 +159,14 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                     val recipe = RecipesRepositoryStub.getRecipeById(recipeId)
 
                     recipe?.let {
-                        RecipeDetailsScreen(recipe = it.toUiModel())
+                        RecipeDetailsScreen(
+                            recipe = recipe.toUiModel(),
+                            modifier = Modifier.padding(paddingValues),
+                            isFavorite = isFavorite,
+                            onToggleFavorite = {
+                                isFavorite = !isFavorite
+                            },
+                        )
                     }
                 }
             }
