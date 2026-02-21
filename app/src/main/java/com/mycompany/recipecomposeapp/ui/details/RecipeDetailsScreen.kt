@@ -1,5 +1,7 @@
 package com.mycompany.recipecomposeapp.ui.details
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,15 +24,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.mycompany.recipecomposeapp.R
 import com.mycompany.recipecomposeapp.data.model.IngredientUiModel
@@ -47,6 +52,7 @@ fun RecipeHeader(
     onToggleFavorite: () -> Unit,
     onShareClick: () -> Unit,
     showShareButton: Boolean = true,
+    showFavoriteButton: Boolean = true,
 ) {
 
     Box(modifier = Modifier.fillMaxWidth()) {
@@ -55,24 +61,36 @@ fun RecipeHeader(
             title = recipe?.title ?: "Рецепт"
         )
 
-        IconButton(
-            onClick = onToggleFavorite,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
-                .size(40.dp),
-            enabled = true
-        )
-        {
-            Icon(
-                painter = painterResource(
-                    if (isFavorite) R.drawable.ic_heart_active
-                    else R.drawable.ic_heart_empty
-                ),
-                contentDescription = "favorites button image",
-                modifier = Modifier.fillMaxSize(),
-                tint = Color.Unspecified
+        if (showFavoriteButton) {
+            IconButton(
+                onClick = onToggleFavorite,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+                    .size(40.dp),
+                enabled = true
             )
+            {
+
+                Crossfade(
+                    targetState = isFavorite,
+                    animationSpec = tween(durationMillis = 300),
+                    label = "favorite_animation"
+                ) { isCurrentlyFavorite ->
+                    val heartIcon = rememberVectorPainter(
+                        image = ImageVector.vectorResource(
+                            id = if (isCurrentlyFavorite) R.drawable.ic_heart_active else R.drawable.ic_heart_empty
+                        )
+                    )
+
+                    Icon(
+                        painter = heartIcon,
+                        contentDescription = "Favorite",
+                        modifier = Modifier.fillMaxSize(),
+                        tint = Color.Unspecified
+                    )
+                }
+            }
         }
 
         if (showShareButton) {
@@ -96,34 +114,39 @@ fun RecipeHeader(
     }
 }
 
+private fun adjustIngredient(ingredient: IngredientUiModel, multiplier: Float): IngredientUiModel =
+    ingredient.copy(
+        quantity = if (ingredient.quantity is Quantity.Measured)
+            ingredient.quantity.copy(amount = ingredient.quantity.amount * multiplier)
+        else ingredient.quantity
+    )
+
 @Composable
-fun RecipeDetailsScreen(recipe: RecipeUiModel?, modifier: Modifier = Modifier) {
+fun RecipeDetailsScreen(
+    recipe: RecipeUiModel?,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit,
+    modifier: Modifier = Modifier
+) {
 
     val context = LocalContext.current
 
-    var uiState by remember { mutableStateOf(recipe) }
+    var currentPortions by rememberSaveable { mutableIntStateOf(recipe?.servings ?: 1) }
 
-    var currentPortions by remember { mutableIntStateOf(recipe?.servings ?: 1) }
-
-    val scaledIngredients = remember(currentPortions) {
-        val multiplier = currentPortions.toDouble() / (recipe?.servings ?: 1)
+    val adjustedIngredients = remember(recipe?.ingredients, currentPortions) {
+        val multiplier = currentPortions.toFloat() / (recipe?.servings?.toFloat() ?: 1.0f)
         recipe?.ingredients?.map { ingredient ->
-            ingredient.copy(
-                quantity = if (ingredient.quantity is Quantity.Measured)
-                    ingredient.quantity.copy(amount = ingredient.quantity.amount * multiplier)
-                else ingredient.quantity
-            )
-        } ?: listOf()
-    }
+            adjustIngredient(ingredient, multiplier)
+        }
+    } ?: listOf()
 
     Column(modifier = modifier.fillMaxWidth()) {
 
         RecipeHeader(
             recipe = recipe,
-            isFavorite = uiState?.isFavorite ?: false,
-            onToggleFavorite = {
-                uiState = uiState?.copy(isFavorite = !(uiState?.isFavorite ?: false))
-            },
+            isFavorite = isFavorite,
+            onToggleFavorite = onToggleFavorite,
+            showFavoriteButton = true,
             onShareClick = {
                 shareRecipe(context, recipe?.id ?: -1, recipe?.title)
             }
@@ -133,7 +156,7 @@ fun RecipeDetailsScreen(recipe: RecipeUiModel?, modifier: Modifier = Modifier) {
 
             item { PortionsSelector(currentPortions, { portions -> currentPortions = portions }) }
 
-            items(items = scaledIngredients) { ingredient ->
+            items(items = adjustedIngredients) { ingredient: IngredientUiModel ->
                 IngredientItem(ingredient = ingredient, modifier = Modifier.padding(start = 12.dp))
             }
 
