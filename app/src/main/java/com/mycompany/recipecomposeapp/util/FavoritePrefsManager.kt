@@ -7,7 +7,7 @@ const val FAVOURITE_RECIPE_IDS_KEY = "favorite_recipe_ids"
 
 class FavoritePrefsManager(context: Context) {
 
-    val sharedPreferences =
+    private val sharedPreferences =
         context.getSharedPreferences(FAVOURITE_RECIPE_IDS_KEY, Context.MODE_PRIVATE)
 
     fun isFavorite(recipeId: Int?) =

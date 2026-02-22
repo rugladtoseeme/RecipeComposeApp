@@ -36,13 +36,15 @@ const val KEY_RECIPE_OBJECT = "recipe"
 @Composable
 fun RecipesApp(deepLinkIntent: Intent?) {
 
+    val context = LocalContext.current
+
     RecipeComposeAppTheme {
 
         var selectedCategoryTitle by remember { mutableStateOf("") }
 
         val navController = rememberNavController()
 
-        val favoritePrefs = FavoritePrefsManager(context = LocalContext.current)
+        val favoritePrefs by remember { mutableStateOf(FavoritePrefsManager(context = context)) }
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),

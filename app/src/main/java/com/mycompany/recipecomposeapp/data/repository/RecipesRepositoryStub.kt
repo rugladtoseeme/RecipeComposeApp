@@ -216,7 +216,7 @@ object RecipesRepositoryStub {
     }
 
     fun getRecipeById(recipeId: Int?): RecipeDto? {
-        return getCategories().flatMap { getRecipesByCategoryId(it.id) }.first { it.id == recipeId }
+        return getCategories().flatMap { getRecipesByCategoryId(it.id) }.firstOrNull() { it.id == recipeId }
     }
 
 }
