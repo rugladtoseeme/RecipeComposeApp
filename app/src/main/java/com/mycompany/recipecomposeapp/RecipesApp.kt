@@ -44,7 +44,7 @@ fun RecipesApp(deepLinkIntent: Intent?) {
 
         val navController = rememberNavController()
 
-        val favoritePrefs by remember { mutableStateOf(FavoritePrefsManager(context = context)) }
+        val favoritePrefs = remember { FavoritePrefsManager(context = context) }
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
