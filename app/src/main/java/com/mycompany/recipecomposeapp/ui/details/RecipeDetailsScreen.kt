@@ -130,7 +130,6 @@ fun RecipeDetailsScreen(
 ) {
 
     val context = LocalContext.current
-
     var currentPortions by rememberSaveable { mutableIntStateOf(recipe?.servings ?: 1) }
 
     val adjustedIngredients = remember(recipe?.ingredients, currentPortions) {
