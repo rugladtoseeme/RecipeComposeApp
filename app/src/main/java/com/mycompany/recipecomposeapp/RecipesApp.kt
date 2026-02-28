@@ -38,7 +38,8 @@ const val KEY_RECIPE_OBJECT = "recipe"
 @Composable
 fun RecipesApp(deepLinkIntent: Intent?) {
 
-    val favoriteDataStore = FavoriteDataStoreManager(LocalContext.current)
+    val context = LocalContext.current
+    val favoriteDataStore = remember { FavoriteDataStoreManager(context) }
 
     val coroutineScope = rememberCoroutineScope()
 
