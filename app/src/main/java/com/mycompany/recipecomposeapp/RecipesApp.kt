@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,7 +65,9 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                             popUpTo("favorites") { inclusive = true }
                             launchSingleTop = true
                         }
-                    }
+                    },
+                    favoritesCount = favoriteDataStore.getFavoriteCountFlow()
+                        .collectAsState(initial = 0).value
                 )
             }
         ) { paddingValues ->
@@ -145,11 +148,9 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                             KEY_RECIPE_OBJECT
                         )
 
-                    var isFavorite by remember { mutableStateOf(false) }
-
-                    LaunchedEffect(recipe?.id) {
-                        isFavorite = favoriteDataStore.isFavorite(recipe?.id)
-                    }
+                    val isFavorite by favoriteDataStore
+                        .isFavoriteFlow(recipe?.id ?: -1)
+                        .collectAsState(initial = false)
 
                     RecipeDetailsScreen(
                         recipe = recipe,
@@ -157,10 +158,8 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                         isFavorite = isFavorite,
                         onToggleFavorite = {
                             coroutineScope.launch {
-                                if (isFavorite) favoriteDataStore.removeFavorite(recipe?.id) else favoriteDataStore.addFavorite(
-                                    recipe?.id
-                                )
-                                isFavorite = !isFavorite
+                                if (isFavorite) favoriteDataStore.removeFavorite(recipe?.id)
+                                else favoriteDataStore.addFavorite(recipe?.id)
                             }
                         },
                     )
@@ -172,15 +171,13 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                 )
                 { backStackEntry ->
 
-                    var isFavorite by remember { mutableStateOf(false) }
-
                     val recipeId = backStackEntry.arguments?.getInt("recipeId")
 
                     val recipe = RecipesRepositoryStub.getRecipeById(recipeId)
 
-                    LaunchedEffect(recipe?.id) {
-                        isFavorite = favoriteDataStore.isFavorite(recipe?.id)
-                    }
+                    val isFavorite by favoriteDataStore
+                        .isFavoriteFlow(recipe?.id ?: -1)
+                        .collectAsState(initial = false)
 
                     recipe?.let {
                         RecipeDetailsScreen(
@@ -189,10 +186,8 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                             isFavorite = isFavorite,
                             onToggleFavorite = {
                                 coroutineScope.launch {
-                                    if (isFavorite) favoriteDataStore.removeFavorite(recipeId) else favoriteDataStore.addFavorite(
-                                        recipeId
-                                    )
-                                    isFavorite = !isFavorite
+                                    if (isFavorite) favoriteDataStore.removeFavorite(recipeId)
+                                    else favoriteDataStore.addFavorite(recipeId)
                                 }
                             },
                         )
