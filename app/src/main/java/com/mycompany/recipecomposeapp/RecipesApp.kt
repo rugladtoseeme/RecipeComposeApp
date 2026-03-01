@@ -115,7 +115,15 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                     FavoritesScreen(
                         drawableResId = R.drawable.img_favorites_header,
                         headerText = "ИЗБРАННОЕ",
-                        modifier = Modifier.padding(paddingValues)
+                        modifier = Modifier.padding(paddingValues),
+                        favoriteDataStore = favoriteDataStore,
+                        onRecipeClick = { recipeId, recipe ->
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                KEY_RECIPE_OBJECT,
+                                recipe
+                            )
+                            navController.navigate("recipe/$recipeId")
+                        }
                     )
                 }
 
