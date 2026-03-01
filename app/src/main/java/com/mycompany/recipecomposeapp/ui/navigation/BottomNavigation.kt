@@ -1,6 +1,7 @@
 package com.mycompany.recipecomposeapp.ui.navigation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -8,7 +9,10 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +39,11 @@ sealed class Destination(val route: String) {
 }
 
 @Composable
-fun BottomNavigation(onCategoriesClick: () -> Unit, onFavoritesClick: () -> Unit) {
+fun BottomNavigation(
+    onCategoriesClick: () -> Unit,
+    onFavoritesClick: () -> Unit,
+    favoritesCount: Int
+) {
 
     Row(modifier = Modifier.navigationBarsPadding()) {
         Button(
@@ -57,30 +65,47 @@ fun BottomNavigation(onCategoriesClick: () -> Unit, onFavoritesClick: () -> Unit
 
         Spacer(Modifier.width(width = 4.dp))
 
-        Button(
-            onClick = onFavoritesClick,
-            Modifier
-                .height(36.dp),
-            colors = ButtonColors(
-                containerColor = MaterialTheme.colorScheme.error, contentColor = Color.White,
-                disabledContainerColor = MaterialTheme.colorScheme.error,
-                disabledContentColor = Color.White
-            ),
-            shape = RoundedCornerShape(size = 8.dp)
+        BadgedBox(
+
+            badge = {
+                if (favoritesCount > 0) {
+                    Badge(
+                        modifier = Modifier.border(
+                            width = 1.dp,
+                            color = Color.White,
+                            shape = CircleShape
+                        )
+                    ) { Text(favoritesCount.toString()) }
+                } else null
+            }
         ) {
-            Row {
-                Text(
-                    text = "ИЗБРАННОЕ",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
-                )
-                Image(
-                    painter = painterResource(R.drawable.ic_heart_empty),
-                    contentDescription = "favorites icon",
-                    modifier = Modifier.size(24.dp)
-                )
+            Button(
+                onClick = onFavoritesClick,
+                Modifier
+                    .height(36.dp),
+                colors = ButtonColors(
+                    containerColor = MaterialTheme.colorScheme.error, contentColor = Color.White,
+                    disabledContainerColor = MaterialTheme.colorScheme.error,
+                    disabledContentColor = Color.White
+                ),
+                shape = RoundedCornerShape(size = 8.dp)
+            ) {
+                Row {
+                    Text(
+                        text = "ИЗБРАННОЕ",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.White
+                    )
+                    Image(
+                        painter = painterResource(R.drawable.ic_heart_empty),
+                        contentDescription = "favorites icon",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
+
+
     }
 
 }
@@ -88,5 +113,5 @@ fun BottomNavigation(onCategoriesClick: () -> Unit, onFavoritesClick: () -> Unit
 @Composable
 @Preview
 fun BottomNavigationPreview() {
-    BottomNavigation(onCategoriesClick = {}, onFavoritesClick = {})
+    BottomNavigation(onCategoriesClick = {}, onFavoritesClick = {}, favoritesCount = 0)
 }
