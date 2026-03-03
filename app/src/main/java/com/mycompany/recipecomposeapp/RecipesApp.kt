@@ -123,7 +123,8 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                                 recipe
                             )
                             navController.navigate("recipe/$recipeId")
-                        }
+                        },
+                        repository = RecipesRepositoryStub
                     )
                 }
 
