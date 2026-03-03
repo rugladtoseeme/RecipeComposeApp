@@ -1,6 +1,6 @@
 package com.mycompany.recipecomposeapp.core.model
 
-import com.mycompany.recipecomposeapp.features.recipes.presentation.RecipeUiModel
+import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.core.ui.Constants
 
 data class RecipeDto(

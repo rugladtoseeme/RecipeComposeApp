@@ -1,7 +1,7 @@
 package com.mycompany.recipecomposeapp.core.model
 
 import android.os.Parcelable
-import com.mycompany.recipecomposeapp.features.recipes.presentation.IngredientUiModel
+import com.mycompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
 import kotlinx.parcelize.Parcelize
 import kotlin.math.roundToInt
 

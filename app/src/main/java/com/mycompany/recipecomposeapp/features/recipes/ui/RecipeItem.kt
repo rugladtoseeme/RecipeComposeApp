@@ -17,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mycompany.recipecomposeapp.R
-import com.mycompany.recipecomposeapp.features.recipes.presentation.RecipeUiModel
+import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 
 @Composable
 fun RecipeItem(

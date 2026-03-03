@@ -38,9 +38,9 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.mycompany.recipecomposeapp.R
-import com.mycompany.recipecomposeapp.features.recipes.presentation.IngredientUiModel
+import com.mycompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
 import com.mycompany.recipecomposeapp.core.model.Quantity
-import com.mycompany.recipecomposeapp.features.recipes.presentation.RecipeUiModel
+import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.core.ui.ScreenHeader
 import com.mycompany.recipecomposeapp.core.ui.shareRecipe
 import kotlin.math.roundToInt

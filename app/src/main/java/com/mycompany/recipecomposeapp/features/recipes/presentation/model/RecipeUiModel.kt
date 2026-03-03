@@ -1,4 +1,4 @@
-package com.mycompany.recipecomposeapp.features.recipes.presentation
+package com.mycompany.recipecomposeapp.features.recipes.presentation.model
 
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable

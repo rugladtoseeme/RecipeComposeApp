@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mycompany.recipecomposeapp.core.model.RecipeDto
-import com.mycompany.recipecomposeapp.features.recipes.presentation.RecipeUiModel
+import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.core.model.toUiModel
 import com.mycompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.mycompany.recipecomposeapp.core.ui.ScreenHeader

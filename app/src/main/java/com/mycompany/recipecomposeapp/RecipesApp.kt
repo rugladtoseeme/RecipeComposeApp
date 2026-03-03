@@ -20,7 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.mycompany.recipecomposeapp.features.recipes.presentation.RecipeUiModel
+import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.core.model.toUiModel
 import com.mycompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.mycompany.recipecomposeapp.features.categories.ui.CategoriesScreen
