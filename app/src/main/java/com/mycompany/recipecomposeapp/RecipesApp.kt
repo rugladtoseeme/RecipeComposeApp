@@ -20,17 +20,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.mycompany.recipecomposeapp.data.model.RecipeUiModel
-import com.mycompany.recipecomposeapp.data.model.toUiModel
+import com.mycompany.recipecomposeapp.features.recipes.presentation.RecipeUiModel
+import com.mycompany.recipecomposeapp.core.model.toUiModel
 import com.mycompany.recipecomposeapp.data.repository.RecipesRepositoryStub
-import com.mycompany.recipecomposeapp.ui.categories.CategoriesScreen
-import com.mycompany.recipecomposeapp.ui.details.RecipeDetailsScreen
-import com.mycompany.recipecomposeapp.ui.favorites.FavoritesScreen
-import com.mycompany.recipecomposeapp.ui.navigation.BottomNavigation
-import com.mycompany.recipecomposeapp.ui.navigation.Destination
-import com.mycompany.recipecomposeapp.ui.recipes.RecipesScreen
-import com.mycompany.recipecomposeapp.ui.theme.RecipeComposeAppTheme
-import com.mycompany.recipecomposeapp.util.FavoriteDataStoreManager
+import com.mycompany.recipecomposeapp.features.categories.ui.CategoriesScreen
+import com.mycompany.recipecomposeapp.features.details.ui.RecipeDetailsScreen
+import com.mycompany.recipecomposeapp.features.favorites.ui.FavoritesScreen
+import com.mycompany.recipecomposeapp.core.ui.navigation.BottomNavigation
+import com.mycompany.recipecomposeapp.core.ui.navigation.Destination
+import com.mycompany.recipecomposeapp.features.recipes.ui.RecipesScreen
+import com.mycompany.recipecomposeapp.core.ui.theme.RecipeComposeAppTheme
+import com.mycompany.recipecomposeapp.core.utils.FavoriteDataStoreManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
