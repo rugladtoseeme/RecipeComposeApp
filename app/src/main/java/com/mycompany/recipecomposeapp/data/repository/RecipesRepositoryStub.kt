@@ -1,9 +1,9 @@
 package com.mycompany.recipecomposeapp.data.repository
 
-import com.mycompany.recipecomposeapp.data.model.CategoryDto
-import com.mycompany.recipecomposeapp.data.model.IngredientDto
-import com.mycompany.recipecomposeapp.data.model.Quantity
-import com.mycompany.recipecomposeapp.data.model.RecipeDto
+import com.mycompany.recipecomposeapp.core.model.CategoryDto
+import com.mycompany.recipecomposeapp.core.model.IngredientDto
+import com.mycompany.recipecomposeapp.core.model.Quantity
+import com.mycompany.recipecomposeapp.core.model.RecipeDto
 
 object RecipesRepositoryStub {
 
