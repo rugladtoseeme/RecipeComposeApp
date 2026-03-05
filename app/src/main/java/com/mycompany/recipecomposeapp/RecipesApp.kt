@@ -98,7 +98,7 @@ fun RecipesApp(deepLinkIntent: Intent?) {
 
                 composable(route = "categories") {
                     CategoriesScreen(
-                        onCategoryClick = { categoryId ->
+                        onCategoryClick = { categoryId, categoryTitle, categoryImageUrl ->
                             selectedCategoryTitle =
                                 RecipesRepositoryStub.getCategoryById(categoryId).title.uppercase()
                             navController.navigate(Destination.Recipes.createRoute(categoryId)) {
@@ -133,10 +133,12 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                     arguments = listOf(navArgument("categoryId") { type = NavType.IntType })
                 ) { backStackEntry ->
                     val categoryId = backStackEntry.arguments?.getInt("categoryId") ?: 0
+                    val categoryImageUrl =
+                        backStackEntry.arguments?.getString("categoryImageUrl") ?: ""
                     RecipesScreen(
                         categoryId = categoryId,
                         categoryTitle = selectedCategoryTitle,
-                        drawableResId = R.drawable.img_recipes_list_header,
+                        categoryImageUrl = categoryImageUrl,
                         modifier = Modifier.padding(paddingValues),
                         onRecipeClick = { recipeId, recipe ->
                             navController.currentBackStackEntry?.savedStateHandle?.set(
