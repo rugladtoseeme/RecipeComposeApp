@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CategoriesViewModel(
-    val repository: RecipesRepositoryStub = RecipesRepositoryStub
+    private val repository: RecipesRepositoryStub = RecipesRepositoryStub
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CategoriesUiState())

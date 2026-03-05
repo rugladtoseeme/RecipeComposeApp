@@ -25,7 +25,7 @@ import com.mycompany.recipecomposeapp.features.categories.presentation.Categorie
 
 @Composable
 fun CategoriesScreen(
-    onCategoryClick: (Int) -> Unit,
+    onCategoryClick: (Int, String, String) -> Unit,
     drawableResId: Int,
     headerText: String,
     modifier: Modifier = Modifier
@@ -63,7 +63,13 @@ fun CategoriesScreen(
 
                 items(uiState.categories, key = { it.id }) { category ->
                     CategoryItem(
-                        onClick = { onCategoryClick(category.id) },
+                        onClick = {
+                            onCategoryClick(
+                                category.id,
+                                category.title,
+                                category.imageUrl
+                            )
+                        },
                         categoryUiModel = category
                     )
                 }
