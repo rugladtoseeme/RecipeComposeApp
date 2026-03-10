@@ -18,15 +18,15 @@ class CategoriesViewModel(
     private val _uiState = MutableStateFlow(CategoriesUiState())
     val uiState: StateFlow<CategoriesUiState> = _uiState.asStateFlow()
 
-    init{
+    init {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
 
             try {
 
                 val result = repository.getCategories()
-                _uiState.update {
-                    it.copy(
+                _uiState.update { state ->
+                    state.copy(
                         categories = result.map { it.toUiModel() },
                         isLoading = false
                     )
