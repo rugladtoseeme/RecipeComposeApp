@@ -1,6 +1,7 @@
 package com.mycompany.recipecomposeapp
 
 import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -97,7 +98,7 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                         onCategoryClick = { categoryId, categoryTitle, categoryImageUrl ->
                             navController.currentBackStackEntry?.savedStateHandle?.set("categoryTitle", categoryTitle)
                             navController.currentBackStackEntry?.savedStateHandle?.set("categoryImageUrl", categoryImageUrl)
-                            navController.navigate(Destination.Recipes.createRoute(categoryId)) {
+                            navController.navigate(Destination.Recipes.createRoute(categoryId, Uri.encode(categoryTitle), Uri.encode(categoryImageUrl))) {
                                 launchSingleTop = true
                             }
                         },
@@ -137,16 +138,16 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                     val categoryImageUrl = savedStateHandle?.get<String>("categoryImageUrl") ?: ""
 
                     RecipesScreen(
-                        categoryId = categoryId,
-                        categoryTitle = categoryTitle.uppercase(),
-                        categoryImageUrl = categoryImageUrl,
                         modifier = Modifier.padding(paddingValues),
                         onRecipeClick = { recipeId, recipe ->
                             navController.currentBackStackEntry?.savedStateHandle?.set(
                                 KEY_RECIPE_OBJECT,
                                 recipe
                             )
-                            navController.navigate("recipe/$recipeId")
+
+                            navController.navigate(
+                                Destination.Recipes.createRoute(categoryId, categoryTitle, categoryImageUrl)
+                            )
                         }
                     )
                 }
