@@ -26,7 +26,7 @@ import com.mycompany.recipecomposeapp.core.ui.ScreenHeader
 fun RecipesScreen(
     categoryId: Int,
     categoryTitle: String,
-    drawableResId: Int,
+    categoryImageUrl: String,
     modifier: Modifier = Modifier,
     onRecipeClick: (Int, RecipeUiModel) -> Unit
 ) {
@@ -46,7 +46,7 @@ fun RecipesScreen(
 
     Column(modifier = modifier.fillMaxWidth()) {
         ScreenHeader(
-            imageResId = drawableResId,
+            imageUrl = categoryImageUrl,
             categoryTitle
         )
 
