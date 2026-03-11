@@ -49,7 +49,6 @@ fun RecipesScreen(
         } else if (uiState.error != null) {
             Spacer(Modifier.weight(1f))
             Text(
-
                 text = uiState.error ?: "",
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier

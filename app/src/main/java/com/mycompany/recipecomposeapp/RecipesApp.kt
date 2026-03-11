@@ -1,7 +1,6 @@
 package com.mycompany.recipecomposeapp
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -96,9 +95,21 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                 composable(route = "categories") {
                     CategoriesScreen(
                         onCategoryClick = { categoryId, categoryTitle, categoryImageUrl ->
-                            navController.currentBackStackEntry?.savedStateHandle?.set("categoryTitle", categoryTitle)
-                            navController.currentBackStackEntry?.savedStateHandle?.set("categoryImageUrl", categoryImageUrl)
-                            navController.navigate(Destination.Recipes.createRoute(categoryId, Uri.encode(categoryTitle), Uri.encode(categoryImageUrl))) {
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                "categoryTitle",
+                                categoryTitle
+                            )
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                "categoryImageUrl",
+                                categoryImageUrl
+                            )
+                            navController.navigate(
+                                Destination.Recipes.createRoute(
+                                    categoryId,
+                                    categoryTitle,
+                                    categoryImageUrl
+                                )
+                            ) {
                                 launchSingleTop = true
                             }
                         },
@@ -129,14 +140,10 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                     route = Destination.Recipes.route,
                     arguments = listOf(
                         navArgument("categoryId") { type = NavType.IntType },
-                        )
-                ) { backStackEntry ->
-                    val categoryId = backStackEntry.arguments?.getInt("categoryId") ?: 0
-
-                    val savedStateHandle = navController.previousBackStackEntry?.savedStateHandle
-                    val categoryTitle = savedStateHandle?.get<String>("categoryTitle") ?: ""
-                    val categoryImageUrl = savedStateHandle?.get<String>("categoryImageUrl") ?: ""
-
+                        navArgument("categoryTitle") { type = NavType.StringType },
+                        navArgument("categoryImageUrl") { type = NavType.StringType }
+                    )
+                ) {
                     RecipesScreen(
                         modifier = Modifier.padding(paddingValues),
                         onRecipeClick = { recipeId, recipe ->
@@ -145,9 +152,7 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                                 recipe
                             )
 
-                            navController.navigate(
-                                Destination.Recipes.createRoute(categoryId, categoryTitle, categoryImageUrl)
-                            )
+                            navController.navigate("recipe/$recipeId")
                         }
                     )
                 }
