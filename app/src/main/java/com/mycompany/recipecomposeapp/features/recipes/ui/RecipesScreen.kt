@@ -1,6 +1,5 @@
 package com.mycompany.recipecomposeapp.features.recipes.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,7 +23,6 @@ import com.mycompany.recipecomposeapp.core.ui.ScreenHeader
 import com.mycompany.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 
-@SuppressLint("ViewModelConstructorInComposable")
 @Composable
 fun RecipesScreen(
     modifier: Modifier = Modifier,

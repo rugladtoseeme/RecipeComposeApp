@@ -6,7 +6,7 @@ data class RecipesUiState(
     val categoryImageUrl: String,
     val isLoading: Boolean = false,
     val error: String? = null,
-    var emptyRecipeList: Boolean = recipes.isEmpty()
+    val emptyRecipeList: Boolean = recipes.isEmpty()
 )
 
 
