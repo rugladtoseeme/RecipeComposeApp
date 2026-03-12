@@ -95,9 +95,21 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                 composable(route = "categories") {
                     CategoriesScreen(
                         onCategoryClick = { categoryId, categoryTitle, categoryImageUrl ->
-                            navController.currentBackStackEntry?.savedStateHandle?.set("categoryTitle", categoryTitle)
-                            navController.currentBackStackEntry?.savedStateHandle?.set("categoryImageUrl", categoryImageUrl)
-                            navController.navigate(Destination.Recipes.createRoute(categoryId)) {
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                "categoryTitle",
+                                categoryTitle
+                            )
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                "categoryImageUrl",
+                                categoryImageUrl
+                            )
+                            navController.navigate(
+                                Destination.Recipes.createRoute(
+                                    categoryId,
+                                    categoryTitle,
+                                    categoryImageUrl
+                                )
+                            ) {
                                 launchSingleTop = true
                             }
                         },
@@ -128,24 +140,18 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                     route = Destination.Recipes.route,
                     arguments = listOf(
                         navArgument("categoryId") { type = NavType.IntType },
-                        )
-                ) { backStackEntry ->
-                    val categoryId = backStackEntry.arguments?.getInt("categoryId") ?: 0
-
-                    val savedStateHandle = navController.previousBackStackEntry?.savedStateHandle
-                    val categoryTitle = savedStateHandle?.get<String>("categoryTitle") ?: ""
-                    val categoryImageUrl = savedStateHandle?.get<String>("categoryImageUrl") ?: ""
-
+                        navArgument("categoryTitle") { type = NavType.StringType },
+                        navArgument("categoryImageUrl") { type = NavType.StringType }
+                    )
+                ) {
                     RecipesScreen(
-                        categoryId = categoryId,
-                        categoryTitle = categoryTitle.uppercase(),
-                        categoryImageUrl = categoryImageUrl,
                         modifier = Modifier.padding(paddingValues),
                         onRecipeClick = { recipeId, recipe ->
                             navController.currentBackStackEntry?.savedStateHandle?.set(
                                 KEY_RECIPE_OBJECT,
                                 recipe
                             )
+
                             navController.navigate("recipe/$recipeId")
                         }
                     )

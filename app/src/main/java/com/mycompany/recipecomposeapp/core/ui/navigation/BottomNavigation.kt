@@ -1,5 +1,6 @@
 package com.mycompany.recipecomposeapp.core.ui.navigation
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
@@ -21,14 +22,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mycompany.recipecomposeapp.R
 
 sealed class Destination(val route: String) {
     object Categories : Destination("categories")
-    object Recipes : Destination("recipes/{categoryId}") {
-        fun createRoute(categoryId: Int) = "recipes/$categoryId"
+
+    object Recipes : Destination("recipes/{categoryId}/{categoryTitle}/{categoryImageUrl}") {
+        fun createRoute(categoryId: Int, categoryTitle: String, categoryImageUrl: String): String {
+            return "recipes/$categoryId/${Uri.encode(categoryTitle)}/${Uri.encode(categoryImageUrl)}"
+        }
     }
 
     object Favorites : Destination("favorites")
@@ -84,7 +87,8 @@ fun BottomNavigation(
                 Modifier
                     .height(36.dp),
                 colors = ButtonColors(
-                    containerColor = MaterialTheme.colorScheme.error, contentColor = Color.White,
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = Color.White,
                     disabledContainerColor = MaterialTheme.colorScheme.error,
                     disabledContentColor = Color.White
                 ),
@@ -105,13 +109,5 @@ fun BottomNavigation(
             }
         }
 
-
     }
-
-}
-
-@Composable
-@Preview
-fun BottomNavigationPreview() {
-    BottomNavigation(onCategoriesClick = {}, onFavoritesClick = {}, favoritesCount = 0)
 }

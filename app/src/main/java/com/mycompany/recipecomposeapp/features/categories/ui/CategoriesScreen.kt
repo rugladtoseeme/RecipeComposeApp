@@ -3,6 +3,7 @@ package com.mycompany.recipecomposeapp.features.categories.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -46,6 +47,7 @@ fun CategoriesScreen(
                     .wrapContentWidth(Alignment.CenterHorizontally)
             )
         } else if (uiState.error != null) {
+            Spacer(Modifier.weight(1f))
             Text(
                 text = uiState.error ?: "",
                 color = MaterialTheme.colorScheme.error,
@@ -53,6 +55,7 @@ fun CategoriesScreen(
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.CenterHorizontally)
             )
+            Spacer(Modifier.weight(1f))
         } else {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
