@@ -2,6 +2,7 @@ package com.mycompany.recipecomposeapp.features.details.presentation
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.mycompany.recipecomposeapp.core.model.Quantity
 import com.mycompany.recipecomposeapp.core.utils.FavoriteDataStoreManager
 import com.mycompany.recipecomposeapp.features.details.presentation.model.RecipeDetailsUiState
@@ -24,13 +25,28 @@ class RecipeDetailsViewModel(application: Application) : AndroidViewModel(applic
 
     val uiState: StateFlow<RecipeDetailsUiState> = _uiState.asStateFlow()
 
-    suspend fun initializeWithRecipe(recipe: RecipeUiModel) {
-        val isFavorite = favoriteManager.isFavorite(recipe.id)
-        _uiState.update {
-            it.copy(
-                recipe = recipe.copy(isFavorite = isFavorite),
-                isFavorite = isFavorite
-            )
+    fun initializeWithRecipe(recipe: RecipeUiModel) {
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, error = null) }
+
+            try {
+                val isFavorite = favoriteManager.isFavorite(recipe.id)
+                _uiState.update { state ->
+                    state.copy(
+                        recipe = recipe.copy(isFavorite = isFavorite),
+                        isFavorite = isFavorite,
+                        isLoading = false
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        error = e.message ?: "Ошибка загрузки",
+                        isLoading = false
+                    )
+                }
+            }
         }
     }
 

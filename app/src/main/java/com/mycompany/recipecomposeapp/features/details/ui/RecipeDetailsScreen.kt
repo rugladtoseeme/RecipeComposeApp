@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -151,29 +153,50 @@ fun RecipeDetailsScreen(
             }
         )
 
-        LazyColumn(modifier = Modifier.padding(16.dp)) {
+        if (uiState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+            )
+        } else if (uiState.error != null) {
+            Spacer(Modifier.weight(1f))
+            Text(
+                text = uiState.error ?: "",
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+            )
+            Spacer(Modifier.weight(1f))
+        } else {
+            LazyColumn(modifier = Modifier.padding(16.dp)) {
 
-            item {
-                PortionsSelector(uiState.numberOfPortions, { portions ->
-                    viewModel.updatePortions(portions)
-                })
+                item {
+                    PortionsSelector(uiState.numberOfPortions, { portions ->
+                        viewModel.updatePortions(portions)
+                    })
+                }
+
+                items(items = adjustedIngredients) { ingredient: IngredientUiModel ->
+                    IngredientItem(
+                        ingredient = ingredient,
+                        modifier = Modifier.padding(start = 12.dp)
+                    )
+                }
+
+                item { Spacer(modifier = Modifier.height(16.dp)) }
+
+                item {
+                    Text(
+                        text = "СПОСОБ ПРИГОТОВЛЕНИЯ",
+                        style = MaterialTheme.typography.displayLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(top = 12.dp)
+                    )
+                }
+                item { InstructionsList(uiState.recipe.method) }
             }
-
-            items(items = adjustedIngredients) { ingredient: IngredientUiModel ->
-                IngredientItem(ingredient = ingredient, modifier = Modifier.padding(start = 12.dp))
-            }
-
-            item { Spacer(modifier = Modifier.height(16.dp)) }
-
-            item {
-                Text(
-                    text = "СПОСОБ ПРИГОТОВЛЕНИЯ",
-                    style = MaterialTheme.typography.displayLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(top = 12.dp)
-                )
-            }
-            item { InstructionsList(uiState.recipe.method) }
         }
     }
 }
