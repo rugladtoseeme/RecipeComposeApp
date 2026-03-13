@@ -31,6 +31,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
 
 class FavoriteDataStoreManager(val context: Context) {
     val preferencesFlow: Flow<Preferences> = context.dataStore.data
+
     suspend fun isFavorite(recipeId: Int?): Boolean {
         val preferences = preferencesFlow.first()
         val favoriteIds = preferences[PreferencesKeys.FAVORITE_RECIPE_IDS] ?: emptySet()

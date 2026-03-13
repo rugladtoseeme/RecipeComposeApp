@@ -7,9 +7,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,7 +28,6 @@ import com.mycompany.recipecomposeapp.features.favorites.ui.FavoritesScreen
 import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.features.recipes.ui.RecipesScreen
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 const val KEY_RECIPE_OBJECT = "recipe"
 
@@ -39,8 +36,6 @@ fun RecipesApp(deepLinkIntent: Intent?) {
 
     val context = LocalContext.current
     val favoriteDataStore = remember { FavoriteDataStoreManager(context) }
-
-    val coroutineScope = rememberCoroutineScope()
 
     RecipeComposeAppTheme {
 
@@ -124,7 +119,6 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                         drawableResId = R.drawable.img_favorites_header,
                         headerText = "ИЗБРАННОЕ",
                         modifier = Modifier.padding(paddingValues),
-                        favoriteDataStore = favoriteDataStore,
                         onRecipeClick = { recipeId, recipe ->
                             navController.currentBackStackEntry?.savedStateHandle?.set(
                                 KEY_RECIPE_OBJECT,
@@ -132,7 +126,6 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                             )
                             navController.navigate("recipe/$recipeId")
                         },
-                        repository = RecipesRepositoryStub
                     )
                 }
 
@@ -166,20 +159,9 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                             KEY_RECIPE_OBJECT
                         )
 
-                    val isFavorite by favoriteDataStore
-                        .isFavoriteFlow(recipe?.id ?: -1)
-                        .collectAsState(initial = false)
-
                     RecipeDetailsScreen(
                         recipe = recipe,
                         modifier = Modifier.padding(paddingValues),
-                        isFavorite = isFavorite,
-                        onToggleFavorite = {
-                            coroutineScope.launch {
-                                if (isFavorite) favoriteDataStore.removeFavorite(recipe?.id)
-                                else favoriteDataStore.addFavorite(recipe?.id)
-                            }
-                        },
                     )
                 }
 
@@ -193,21 +175,10 @@ fun RecipesApp(deepLinkIntent: Intent?) {
 
                     val recipe = RecipesRepositoryStub.getRecipeById(recipeId)
 
-                    val isFavorite by favoriteDataStore
-                        .isFavoriteFlow(recipe?.id ?: -1)
-                        .collectAsState(initial = false)
-
                     recipe?.let {
                         RecipeDetailsScreen(
                             recipe = recipe.toUiModel(),
                             modifier = Modifier.padding(paddingValues),
-                            isFavorite = isFavorite,
-                            onToggleFavorite = {
-                                coroutineScope.launch {
-                                    if (isFavorite) favoriteDataStore.removeFavorite(recipeId)
-                                    else favoriteDataStore.addFavorite(recipeId)
-                                }
-                            },
                         )
                     }
                 }
