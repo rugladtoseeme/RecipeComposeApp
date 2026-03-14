@@ -1,6 +1,5 @@
 package com.mycompany.recipecomposeapp.features.details.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
@@ -29,7 +28,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,11 +40,11 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mycompany.recipecomposeapp.R
-import com.mycompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
-import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.core.ui.ScreenHeader
 import com.mycompany.recipecomposeapp.core.ui.shareRecipe
 import com.mycompany.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
+import com.mycompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
+import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import kotlin.math.roundToInt
 
 @Composable
@@ -118,7 +116,6 @@ fun RecipeHeader(
     }
 }
 
-@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun RecipeDetailsScreen(
     recipe: RecipeUiModel?,
@@ -130,8 +127,6 @@ fun RecipeDetailsScreen(
     LaunchedEffect(recipe) {
         recipe?.let { viewModel.initializeWithRecipe(it) }
     }
-
-    val coroutineScope = rememberCoroutineScope()
 
     val uiState by viewModel.uiState.collectAsState()
 
@@ -146,7 +141,7 @@ fun RecipeDetailsScreen(
         RecipeHeader(
             recipe = uiState.recipe,
             isFavorite = uiState.isFavorite,
-            onToggleFavorite = { viewModel.toggleFavorite(coroutineScope) },
+            onToggleFavorite = { viewModel.toggleFavorite() },
             showFavoriteButton = true,
             onShareClick = {
                 shareRecipe(context, uiState.recipe.id, uiState.recipe.title)

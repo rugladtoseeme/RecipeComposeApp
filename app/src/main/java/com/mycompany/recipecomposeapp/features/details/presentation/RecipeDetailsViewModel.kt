@@ -8,7 +8,6 @@ import com.mycompany.recipecomposeapp.core.utils.FavoriteDataStoreManager
 import com.mycompany.recipecomposeapp.features.details.presentation.model.RecipeDetailsUiState
 import com.mycompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
 import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -50,8 +49,8 @@ class RecipeDetailsViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    fun toggleFavorite(coroutineScope: CoroutineScope) {
-        coroutineScope.launch {
+    fun toggleFavorite() {
+        viewModelScope.launch {
             if (_uiState.value.isFavorite) favoriteManager.removeFavorite(_uiState.value.recipe.id)
             else favoriteManager.addFavorite(_uiState.value.recipe.id)
 
