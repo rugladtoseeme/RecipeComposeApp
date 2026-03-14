@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,11 +24,10 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,12 +38,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mycompany.recipecomposeapp.R
-import com.mycompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
-import com.mycompany.recipecomposeapp.core.model.Quantity
-import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.core.ui.ScreenHeader
 import com.mycompany.recipecomposeapp.core.ui.shareRecipe
+import com.mycompany.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
+import com.mycompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
+import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import kotlin.math.roundToInt
 
 @Composable
@@ -114,62 +116,82 @@ fun RecipeHeader(
     }
 }
 
-private fun adjustIngredient(ingredient: IngredientUiModel, multiplier: Float): IngredientUiModel =
-    ingredient.copy(
-        quantity = if (ingredient.quantity is Quantity.Measured)
-            ingredient.quantity.copy(amount = ingredient.quantity.amount * multiplier)
-        else ingredient.quantity
-    )
-
 @Composable
 fun RecipeDetailsScreen(
     recipe: RecipeUiModel?,
-    isFavorite: Boolean,
-    onToggleFavorite: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    val context = LocalContext.current
-    var currentPortions by rememberSaveable { mutableIntStateOf(recipe?.servings ?: 1) }
+    val viewModel: RecipeDetailsViewModel = viewModel()
 
-    val adjustedIngredients = remember(recipe?.ingredients, currentPortions) {
-        val multiplier = currentPortions.toFloat() / (recipe?.servings?.toFloat() ?: 1.0f)
-        recipe?.ingredients?.map { ingredient ->
-            adjustIngredient(ingredient, multiplier)
-        }
-    } ?: listOf()
+    LaunchedEffect(recipe) {
+        recipe?.let { viewModel.initializeWithRecipe(it) }
+    }
+
+    val uiState by viewModel.uiState.collectAsState()
+
+    val context = LocalContext.current
+
+    val adjustedIngredients = remember(uiState.recipe.ingredients, uiState.numberOfPortions) {
+        viewModel.adjustIngredients()
+    }
 
     Column(modifier = modifier.fillMaxWidth()) {
 
         RecipeHeader(
-            recipe = recipe,
-            isFavorite = isFavorite,
-            onToggleFavorite = onToggleFavorite,
+            recipe = uiState.recipe,
+            isFavorite = uiState.isFavorite,
+            onToggleFavorite = { viewModel.toggleFavorite() },
             showFavoriteButton = true,
             onShareClick = {
-                shareRecipe(context, recipe?.id ?: -1, recipe?.title)
+                shareRecipe(context, uiState.recipe.id, uiState.recipe.title)
             }
         )
 
-        LazyColumn(modifier = Modifier.padding(16.dp)) {
+        if (uiState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+            )
+        } else if (uiState.error != null) {
+            Spacer(Modifier.weight(1f))
+            Text(
+                text = uiState.error ?: "",
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+            )
+            Spacer(Modifier.weight(1f))
+        } else {
+            LazyColumn(modifier = Modifier.padding(16.dp)) {
 
-            item { PortionsSelector(currentPortions, { portions -> currentPortions = portions }) }
+                item {
+                    PortionsSelector(uiState.numberOfPortions, { portions ->
+                        viewModel.updatePortions(portions)
+                    })
+                }
 
-            items(items = adjustedIngredients) { ingredient: IngredientUiModel ->
-                IngredientItem(ingredient = ingredient, modifier = Modifier.padding(start = 12.dp))
+                items(items = adjustedIngredients) { ingredient: IngredientUiModel ->
+                    IngredientItem(
+                        ingredient = ingredient,
+                        modifier = Modifier.padding(start = 12.dp)
+                    )
+                }
+
+                item { Spacer(modifier = Modifier.height(16.dp)) }
+
+                item {
+                    Text(
+                        text = "СПОСОБ ПРИГОТОВЛЕНИЯ",
+                        style = MaterialTheme.typography.displayLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(top = 12.dp)
+                    )
+                }
+                item { InstructionsList(uiState.recipe.method) }
             }
-
-            item { Spacer(modifier = Modifier.height(16.dp)) }
-
-            item {
-                Text(
-                    text = "СПОСОБ ПРИГОТОВЛЕНИЯ",
-                    style = MaterialTheme.typography.displayLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(top = 12.dp)
-                )
-            }
-            item { InstructionsList(recipe?.method) }
         }
     }
 }
