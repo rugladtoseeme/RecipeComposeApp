@@ -14,35 +14,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mycompany.recipecomposeapp.core.model.RecipeDto
-import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
-import com.mycompany.recipecomposeapp.core.model.toUiModel
-import com.mycompany.recipecomposeapp.data.repository.RecipesRepositoryStub
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mycompany.recipecomposeapp.core.ui.ScreenHeader
+import com.mycompany.recipecomposeapp.features.favorites.presentation.FavoritesViewModel
+import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.features.recipes.ui.RecipeItem
-import com.mycompany.recipecomposeapp.core.utils.FavoriteDataStoreManager
-import kotlinx.coroutines.flow.map
 
 @Composable
 fun FavoritesScreen(
     drawableResId: Int,
     headerText: String,
-    favoriteDataStore: FavoriteDataStoreManager,
-    repository: RecipesRepositoryStub,
     modifier: Modifier = Modifier,
     onRecipeClick: (Int, RecipeUiModel) -> Unit
 ) {
 
-    val favoriteRecipesFlow = remember { favoriteDataStore.getFavoriteIdsFlow() }
-        .map { ids -> ids.mapNotNull { repository.getRecipeById(it.toIntOrNull()) } }
+    val viewModel: FavoritesViewModel = viewModel()
 
-    val favoriteRecipes by favoriteRecipesFlow.collectAsState(initial = emptyList())
+    val uiState by viewModel.uiState.collectAsState()
 
     Column(modifier = modifier.fillMaxWidth()) {
         ScreenHeader(
@@ -50,17 +43,17 @@ fun FavoritesScreen(
             title = headerText
         )
 
-        if (favoriteRecipes.isNotEmpty()) {
+        if (uiState.favorites.isNotEmpty()) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(
-                    items = favoriteRecipes,
-                    key = { it.id }
-                ) { recipe: RecipeDto ->
-                    RecipeItem(recipe = recipe.toUiModel(), onRecipeClick = onRecipeClick)
+                    items = uiState.favorites,
+                    key = { recipe -> recipe.id }
+                ) { recipe: RecipeUiModel ->
+                    RecipeItem(recipe = recipe, onRecipeClick = onRecipeClick)
                 }
             }
 
