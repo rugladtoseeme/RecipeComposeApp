@@ -24,10 +24,8 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -118,23 +116,14 @@ fun RecipeHeader(
 
 @Composable
 fun RecipeDetailsScreen(
-    recipe: RecipeUiModel?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-
-    val viewModel: RecipeDetailsViewModel = viewModel()
-
-    LaunchedEffect(recipe) {
-        recipe?.let { viewModel.initializeWithRecipe(it) }
-    }
-
-    val uiState by viewModel.uiState.collectAsState()
 
     val context = LocalContext.current
 
-    val adjustedIngredients = remember(uiState.recipe.ingredients, uiState.numberOfPortions) {
-        viewModel.adjustIngredients()
-    }
+    val viewModel: RecipeDetailsViewModel = viewModel()
+
+    val uiState by viewModel.uiState.collectAsState()
 
     Column(modifier = modifier.fillMaxWidth()) {
 
@@ -173,7 +162,7 @@ fun RecipeDetailsScreen(
                     })
                 }
 
-                items(items = adjustedIngredients) { ingredient: IngredientUiModel ->
+                items(items = uiState.scaledIngredients) { ingredient: IngredientUiModel ->
                     IngredientItem(
                         ingredient = ingredient,
                         modifier = Modifier.padding(start = 12.dp)

@@ -1,5 +1,6 @@
 package com.mycompany.recipecomposeapp.features.details.presentation.model
 
+import com.mycompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
 import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 
 data class RecipeDetailsUiState(
@@ -12,8 +13,13 @@ data class RecipeDetailsUiState(
         isFavorite = false,
         servings = 1
     ),
+    val scaledIngredients: List<IngredientUiModel> = recipe.ingredients,
     val numberOfPortions: Int = 1,
     val isFavorite: Boolean = false,
     val isLoading: Boolean = false,
     val error: String? = null,
 )
+
+
+
+
