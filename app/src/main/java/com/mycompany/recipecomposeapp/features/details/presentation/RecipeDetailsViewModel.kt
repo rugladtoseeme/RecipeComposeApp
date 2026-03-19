@@ -122,7 +122,7 @@ class RecipeDetailsViewModel(
 
     private fun adjustIngredients(): List<IngredientUiModel> {
         val multiplier =
-            _uiState.value.numberOfPortions.toFloat()
+            _uiState.value.numberOfPortions.toFloat()/_uiState.value.recipe.servings.toFloat()
         return _uiState.value.recipe.ingredients.map { ingredient ->
             adjustIngredient(ingredient, multiplier)
         }
