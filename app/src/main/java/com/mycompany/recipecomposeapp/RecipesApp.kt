@@ -16,16 +16,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.mycompany.recipecomposeapp.core.model.toUiModel
 import com.mycompany.recipecomposeapp.core.ui.navigation.BottomNavigation
 import com.mycompany.recipecomposeapp.core.ui.navigation.Destination
 import com.mycompany.recipecomposeapp.core.ui.theme.RecipeComposeAppTheme
 import com.mycompany.recipecomposeapp.core.utils.FavoriteDataStoreManager
-import com.mycompany.recipecomposeapp.data.repository.RecipesRepositoryStub
 import com.mycompany.recipecomposeapp.features.categories.ui.CategoriesScreen
 import com.mycompany.recipecomposeapp.features.details.ui.RecipeDetailsScreen
 import com.mycompany.recipecomposeapp.features.favorites.ui.FavoritesScreen
-import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.features.recipes.ui.RecipesScreen
 import kotlinx.coroutines.delay
 
@@ -154,33 +151,9 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                     route = Destination.Recipe.route,
                     arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
                 ) { _ ->
-                    val recipe =
-                        navController.previousBackStackEntry?.savedStateHandle?.get<RecipeUiModel>(
-                            KEY_RECIPE_OBJECT
-                        )
-
                     RecipeDetailsScreen(
-                        recipe = recipe,
                         modifier = Modifier.padding(paddingValues),
                     )
-                }
-
-                composable(
-                    route = Destination.Recipe.route,
-                    arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
-                )
-                { backStackEntry ->
-
-                    val recipeId = backStackEntry.arguments?.getInt("recipeId")
-
-                    val recipe = RecipesRepositoryStub.getRecipeById(recipeId)
-
-                    recipe?.let {
-                        RecipeDetailsScreen(
-                            recipe = recipe.toUiModel(),
-                            modifier = Modifier.padding(paddingValues),
-                        )
-                    }
                 }
             }
         }
