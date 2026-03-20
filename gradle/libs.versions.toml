@@ -13,6 +13,7 @@ navigationCompose = "2.9.7"
 datastore = "1.1.1"
 datastoreCore = "1.2.0"
 androidx-lifecycle = "2.6.1"
+kotlinx-serialization = "1.6.0"
 androidx-compose-lifecycle = "2.6.1"
 
 [libraries]
@@ -38,11 +39,12 @@ coil = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version = "2.5.3" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-datastore-core = { group = "androidx.datastore", name = "datastore-core", version.ref = "datastoreCore" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
-
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
