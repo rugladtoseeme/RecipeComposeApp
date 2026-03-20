@@ -33,38 +33,44 @@ class MainActivity : ComponentActivity() {
 
         val url = URL("https://recipes.androidsprint.ru/api/category")
 
-        val thread = Thread {
-            val connection = url.openConnection() as HttpURLConnection
+        val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+        try {
 
-            connection.connect()
+            val thread = Thread {
 
-            val categoriesListJson =
-                connection.getInputStream().bufferedReader().readText().trimIndent()
+                connection.connect()
+
+                val categoriesListJson =
+                    connection.getInputStream().bufferedReader().readText().trimIndent()
 
 
-            Log.i("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
+                Log.i("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
 
-            Log.i("!!!", categoriesListJson)
+                Log.i("!!!", categoriesListJson)
 
-            val categoriesList: List<CategoryDto> =
-                Json.decodeFromString<List<CategoryDto>>(categoriesListJson)
+                val categoriesList: List<CategoryDto> =
+                    Json.decodeFromString<List<CategoryDto>>(categoriesListJson)
 
-            Log.i("!!!", "получено: ${categoriesList.size} категорий рецептов")
-            Log.i(
-                "!!!",
-                "получены следующие категории:\n ${
-                    categoriesList.joinToString(
-                        separator = ",\n",
-                        postfix = "."
-                    )
-                }"
-            )
+                Log.i("!!!", "получено: ${categoriesList.size} категорий рецептов")
+                Log.i(
+                    "!!!",
+                    "получены следующие категории:\n ${
+                        categoriesList.joinToString(
+                            separator = ",\n",
+                            postfix = "."
+                        )
+                    }"
+                )
 
+            }
+            Log.i("!!!", "Метод onCreate() выполняется на потоке: ${Thread.currentThread().name}")
+
+            thread.start()
+        } catch (e: Exception) {
+            Log.e("MainActivity", e.message, e)
+        } finally {
+            connection.disconnect()
         }
-
-        Log.i("!!!", "Метод onCreate() выполняется на потоке: ${Thread.currentThread().name}")
-
-        thread.start()
     }
 
     override fun onNewIntent(intent: Intent) {
