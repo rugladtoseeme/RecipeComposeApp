@@ -10,13 +10,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.mycompany.recipecomposeapp.core.model.CategoryDto
+import com.mycompany.recipecomposeapp.core.model.RecipeDto
 import kotlinx.serialization.json.Json
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 
 class MainActivity : ComponentActivity() {
     private var deepLinkIntent by mutableStateOf<Intent?>(null)
+
+    private val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,23 +38,68 @@ class MainActivity : ComponentActivity() {
 
         val url = URL("https://recipes.androidsprint.ru/api/category")
 
+        val json = Json {
+            ignoreUnknownKeys = true
+        }
+
         val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
         try {
 
-            val thread = Thread {
+            threadPool.execute {
 
                 connection.connect()
 
-                val categoriesListJson =
+                val categoriesListJson = try {
                     connection.getInputStream().bufferedReader().readText().trimIndent()
+                } catch (e: Exception) {
+                    Log.e(
+                        "MainActivity",
+                        "Не удалось получить категории.",
+                        e
+                    )
+                    throw e
+                }
 
 
-                Log.i("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
+                Log.i(
+                    "!!!",
+                    "Выполняю запрос (категории) на потоке: ${Thread.currentThread().name}"
+                )
 
                 Log.i("!!!", categoriesListJson)
 
                 val categoriesList: List<CategoryDto> =
-                    Json.decodeFromString<List<CategoryDto>>(categoriesListJson)
+                    json.decodeFromString<List<CategoryDto>>(categoriesListJson)
+
+                categoriesList.forEach {
+                    threadPool.execute {
+                        val connection =
+                            URL("https://recipes.androidsprint.ru/api/category/${it.id}/recipes").openConnection()
+                        connection.connect()
+                        val recipesList = try {
+                            json.decodeFromString<List<RecipeDto>>(
+                                connection.getInputStream().bufferedReader().readText().trimIndent()
+                            )
+                        }
+                        catch (e: Exception){
+                            Log.e(
+                                "MainActivity",
+                                "Не удалось получить рецепты из категории ${it.title}",
+                                e
+                            )
+                            throw e
+                        }
+
+                        Log.i(
+                            "!!!",
+                            "Выполняю запрос (рецепты) на потоке: ${Thread.currentThread().name}"
+                        )
+                        Log.i(
+                            "!!!",
+                            "В категории ${it.title} получено ${recipesList.size} рецептов.\n"
+                        )
+                    }
+                }
 
                 Log.i("!!!", "получено: ${categoriesList.size} категорий рецептов")
                 Log.i(
@@ -65,7 +115,6 @@ class MainActivity : ComponentActivity() {
             }
             Log.i("!!!", "Метод onCreate() выполняется на потоке: ${Thread.currentThread().name}")
 
-            thread.start()
         } catch (e: Exception) {
             Log.e("MainActivity", e.message, e)
         } finally {
@@ -79,5 +128,10 @@ class MainActivity : ComponentActivity() {
             deepLinkIntent = intent
         }
         setIntent(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        threadPool.shutdown()
     }
 }
