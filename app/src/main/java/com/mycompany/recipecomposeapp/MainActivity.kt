@@ -42,15 +42,15 @@ class MainActivity : ComponentActivity() {
             ignoreUnknownKeys = true
         }
 
-        val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+        val connection: HttpURLConnection? = url.openConnection() as? HttpURLConnection
         try {
 
             threadPool.execute {
 
-                connection.connect()
+                connection?.connect()
 
                 val categoriesListJson = try {
-                    connection.getInputStream().bufferedReader().readText().trimIndent()
+                    connection?.getInputStream()?.bufferedReader()?.readText()?.trimIndent()
                 } catch (e: Exception) {
                     Log.e(
                         "MainActivity",
@@ -66,10 +66,10 @@ class MainActivity : ComponentActivity() {
                     "Выполняю запрос (категории) на потоке: ${Thread.currentThread().name}"
                 )
 
-                Log.i("!!!", categoriesListJson)
+                Log.i("!!!", categoriesListJson?:"")
 
                 val categoriesList: List<CategoryDto> =
-                    json.decodeFromString<List<CategoryDto>>(categoriesListJson)
+                    json.decodeFromString<List<CategoryDto>>(categoriesListJson?:"")
 
                 categoriesList.forEach {
                     threadPool.execute {
@@ -118,7 +118,7 @@ class MainActivity : ComponentActivity() {
         } catch (e: Exception) {
             Log.e("MainActivity", e.message, e)
         } finally {
-            connection.disconnect()
+            connection?.disconnect()
         }
     }
 
