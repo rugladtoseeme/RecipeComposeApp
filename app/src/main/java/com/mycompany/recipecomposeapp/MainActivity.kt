@@ -12,16 +12,17 @@ import androidx.compose.runtime.setValue
 import com.mycompany.recipecomposeapp.core.model.CategoryDto
 import com.mycompany.recipecomposeapp.core.model.RecipeDto
 import kotlinx.serialization.json.Json
-import java.net.HttpURLConnection
-import java.net.URL
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
 class MainActivity : ComponentActivity() {
     private var deepLinkIntent by mutableStateOf<Intent?>(null)
-
     private val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
+
+    private val client = OkHttpClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,21 +37,20 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
 
-        val url = URL("https://recipes.androidsprint.ru/api/category")
+        val categoryRequest = Request.Builder()
+            .url("https://recipes.androidsprint.ru/api/category")
+            .build()
 
         val json = Json {
             ignoreUnknownKeys = true
         }
 
-        val connection: HttpURLConnection? = url.openConnection() as? HttpURLConnection
         try {
 
             threadPool.execute {
 
-                connection?.connect()
-
                 val categoriesListJson = try {
-                    connection?.getInputStream()?.bufferedReader()?.readText()?.trimIndent()
+                    client.newCall(categoryRequest).execute().body?.string()
                 } catch (e: Exception) {
                     Log.e(
                         "MainActivity",
@@ -60,28 +60,27 @@ class MainActivity : ComponentActivity() {
                     throw e
                 }
 
-
                 Log.i(
                     "!!!",
                     "Выполняю запрос (категории) на потоке: ${Thread.currentThread().name}"
                 )
 
-                Log.i("!!!", categoriesListJson?:"")
+                Log.i("!!!", categoriesListJson ?: "")
 
                 val categoriesList: List<CategoryDto> =
-                    json.decodeFromString<List<CategoryDto>>(categoriesListJson?:"")
+                    json.decodeFromString<List<CategoryDto>>(categoriesListJson ?: "")
 
                 categoriesList.forEach {
                     threadPool.execute {
-                        val connection =
-                            URL("https://recipes.androidsprint.ru/api/category/${it.id}/recipes").openConnection()
-                        connection.connect()
+                        val recipesRequest = Request.Builder()
+                            .url("https://recipes.androidsprint.ru/api/category/${it.id}/recipes")
+                            .build()
+
                         val recipesList = try {
                             json.decodeFromString<List<RecipeDto>>(
-                                connection.getInputStream().bufferedReader().readText().trimIndent()
+                                client.newCall(recipesRequest).execute().body?.string() ?: ""
                             )
-                        }
-                        catch (e: Exception){
+                        } catch (e: Exception) {
                             Log.e(
                                 "MainActivity",
                                 "Не удалось получить рецепты из категории ${it.title}",
@@ -117,8 +116,6 @@ class MainActivity : ComponentActivity() {
 
         } catch (e: Exception) {
             Log.e("MainActivity", e.message, e)
-        } finally {
-            connection?.disconnect()
         }
     }
 
