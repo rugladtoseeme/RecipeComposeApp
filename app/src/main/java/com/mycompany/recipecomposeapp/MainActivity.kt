@@ -22,22 +22,22 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-class MainActivity() : ComponentActivity() {
+class MainActivity : ComponentActivity() {
     private var deepLinkIntent by mutableStateOf<Intent?>(null)
     private val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
 
-    val contentType = "application/json".toMediaType()
+    private val contentType = "application/json".toMediaType()
     val json: Json = Json {
         ignoreUnknownKeys = true
         coerceInputValues = true
     }
 
-    val retrofit = Retrofit.Builder()
+    private val retrofit = Retrofit.Builder()
         .baseUrl(NetworkConfig.BASE_URL)
         .addConverterFactory(json.asConverterFactory(contentType))
         .build()
 
-    val apiService = retrofit.create(RecipesApiService::class.java)
+    private val apiService = retrofit.create(RecipesApiService::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
