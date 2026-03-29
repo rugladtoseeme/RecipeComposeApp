@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mycompany.recipecomposeapp.core.model.Quantity
 import com.mycompany.recipecomposeapp.core.model.toUiModel
 import com.mycompany.recipecomposeapp.core.utils.FavoriteDataStoreManager
-import com.mycompany.recipecomposeapp.data.repository.RecipesRepositoryStub
+import com.mycompany.recipecomposeapp.data.repository.RecipesRepository
 import com.mycompany.recipecomposeapp.features.details.presentation.model.RecipeDetailsUiState
 import com.mycompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class RecipeDetailsViewModel(
     application: Application,
-    savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle?,
+    val repository: RecipesRepository
 ) : AndroidViewModel(application) {
     private val favoriteManager = FavoriteDataStoreManager(application)
 
@@ -28,7 +29,7 @@ class RecipeDetailsViewModel(
 
 
     val uiState: StateFlow<RecipeDetailsUiState> = _uiState.asStateFlow()
-    private val recipeId: Int = savedStateHandle.get<Int>("recipeId")
+    private val recipeId: Int = savedStateHandle?.get<Int>("recipeId")
         ?: throw IllegalArgumentException("recipeId is required")
 
     init {
@@ -40,7 +41,7 @@ class RecipeDetailsViewModel(
 
             _uiState.update { it.copy(isLoading = true, error = null) }
 
-            val recipe = RecipesRepositoryStub.getRecipeById(recipeId)?.toUiModel()
+            val recipe = repository.getRecipe(recipeId)?.toUiModel()
 
             try {
                 recipe?.let {

@@ -3,7 +3,7 @@ package com.mycompany.recipecomposeapp.features.categories.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mycompany.recipecomposeapp.core.model.toUiModel
-import com.mycompany.recipecomposeapp.data.repository.RecipesRepositoryStub
+import com.mycompany.recipecomposeapp.data.repository.RecipesRepository
 import com.mycompany.recipecomposeapp.features.categories.presentation.model.CategoriesUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CategoriesViewModel(
-    private val repository: RecipesRepositoryStub = RecipesRepositoryStub
+    private val repository: RecipesRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CategoriesUiState())

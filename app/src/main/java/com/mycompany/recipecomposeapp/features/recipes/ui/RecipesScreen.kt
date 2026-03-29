@@ -18,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mycompany.recipecomposeapp.core.ui.ScreenHeader
 import com.mycompany.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
@@ -26,10 +25,9 @@ import com.mycompany.recipecomposeapp.features.recipes.presentation.model.Recipe
 @Composable
 fun RecipesScreen(
     modifier: Modifier = Modifier,
-    onRecipeClick: (Int, RecipeUiModel) -> Unit
+    onRecipeClick: (Int, RecipeUiModel) -> Unit,
+    viewModel: RecipesViewModel
 ) {
-
-    val viewModel: RecipesViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
 
     Column(modifier = modifier.fillMaxWidth()) {
