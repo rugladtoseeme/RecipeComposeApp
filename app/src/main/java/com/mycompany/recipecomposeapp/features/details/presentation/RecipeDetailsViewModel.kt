@@ -27,7 +27,6 @@ class RecipeDetailsViewModel(
         RecipeDetailsUiState()
     )
 
-
     val uiState: StateFlow<RecipeDetailsUiState> = _uiState.asStateFlow()
     private val recipeId: Int = savedStateHandle.get<Int>("recipeId")
         ?: throw IllegalArgumentException("recipeId is required")
