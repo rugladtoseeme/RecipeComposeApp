@@ -13,8 +13,6 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.double
 import kotlinx.serialization.json.jsonPrimitive
 import kotlin.math.roundToInt
 
@@ -29,7 +27,7 @@ sealed class Quantity : Parcelable {
             if (amount % 1.0 <= 0.1 || amount % 1.0 >= 0.9) {
                 amount.roundToInt().toString()
             } else {
-                amount.toString() 
+                amount.toString()
             }
         } ${unit}"
     }
@@ -39,78 +37,67 @@ sealed class Quantity : Parcelable {
         override fun toString() = "по вкусу"
     }
 
+    @Serializable
+    data class Some(val amount: String, val unit: String) : Quantity() {
+        override fun toString() = "$amount $unit"
+    }
+
 }
 
-@Serializable
-data class IngredientDto(@SerialName("description") val name: String, @Serializable(with = QuantitySerializer::class) val quantity: Quantity)
+@Serializable(with = IngredientSerializer::class)
+data class IngredientDto(
+    @SerialName("description") val name: String,
+    @Serializable val quantity: Quantity
+)
 
 fun IngredientDto.toUiModel() = IngredientUiModel(
     title = name,
     quantity = quantity
 )
 
-object QuantitySerializer : KSerializer<Quantity> {
+object IngredientSerializer : KSerializer<IngredientDto> {
 
-    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Quantity")
+    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("IngredientDto")
 
-    override fun deserialize(decoder: Decoder): Quantity {
+    override fun deserialize(decoder: Decoder): IngredientDto {
         return try {
             val jsonElement = decoder.decodeSerializableValue(JsonElement.serializer())
 
             when {
                 jsonElement is JsonObject -> {
-                    val amount = jsonElement["amount"]?.jsonPrimitive?.double
-                        ?: throw SerializationException("Missing amount")
-                    val unit = jsonElement["unit"]?.jsonPrimitive?.content
+
+                    val amountString = jsonElement["quantity"]?.jsonPrimitive?.content
+                        ?: throw SerializationException("Missing quantity")
+
+                    val amountDouble = amountString.toDoubleOrNull()
+
+                    val unit = jsonElement["unitOfMeasure"]?.jsonPrimitive?.content
                         ?: throw SerializationException("Missing unit")
-                    Quantity.Measured(amount, unit)
+
+                    val name = jsonElement["description"]?.jsonPrimitive?.content ?: ""
+
+                    if (amountDouble != null) IngredientDto(
+                        name = name,
+                        quantity = Quantity.Measured(amountDouble, unit)
+                    )
+                    else if (amountString.equals("по вкусу", ignoreCase = true)) IngredientDto(
+                        name = name,
+                        quantity = Quantity.ByTaste
+                    )
+                    else IngredientDto(
+                        name = name,
+                        quantity = Quantity.Some(amountString, unit)
+                    )
                 }
 
-                jsonElement is JsonPrimitive && jsonElement.isString -> {
-                    val stringValue = jsonElement.content
-                    when (stringValue.lowercase()) {
-                        "по вкусу", "to taste" -> Quantity.ByTaste
-                        else -> {
-                            parseQuantityFromString(stringValue) ?: Quantity.ByTaste
-                        }
-                    }
-                }
-
-                else -> throw SerializationException("Unexpected JSON type for Quantity")
+                else -> throw SerializationException("Unexpected JSON type for IngredientDto")
             }
         } catch (e: Exception) {
-            Quantity.ByTaste
+            IngredientDto("", quantity = Quantity.ByTaste)
         }
     }
 
-    private fun parseQuantityFromString(str: String): Quantity.Measured? {
-        val regex = Regex("""^(\d+(?:\.\d+)?)\s*([а-яa-z]+)$""")
-        val match = regex.find(str.trim())
-        return match?.let {
-            val amount = it.groupValues[1].toDoubleOrNull() ?: return null
-            val unit = it.groupValues[2]
-            Quantity.Measured(amount, unit)
-        }
+    override fun serialize(encoder: Encoder, value: IngredientDto) {
+        throw UnsupportedOperationException("Serialization is not supported")
     }
-
-    override fun serialize(encoder: Encoder, value: Quantity) {
-        when (value) {
-            is Quantity.Measured -> {
-                encoder.encodeSerializableValue(
-                    JsonElement.serializer(),
-                    JsonObject(mapOf(
-                        "amount" to JsonPrimitive(value.amount),
-                        "unit" to JsonPrimitive(value.unit)
-                    ))
-                )
-            }
-            Quantity.ByTaste -> {
-                encoder.encodeSerializableValue(
-                    JsonElement.serializer(),
-                    JsonPrimitive("по вкусу")
-                )
-            }
-        }
-    }
-
 }

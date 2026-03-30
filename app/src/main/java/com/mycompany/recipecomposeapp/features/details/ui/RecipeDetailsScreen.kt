@@ -36,7 +36,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mycompany.recipecomposeapp.R
 import com.mycompany.recipecomposeapp.core.ui.ScreenHeader
 import com.mycompany.recipecomposeapp.core.ui.shareRecipe
@@ -117,11 +116,10 @@ fun RecipeHeader(
 @Composable
 fun RecipeDetailsScreen(
     modifier: Modifier = Modifier,
+    viewModel: RecipeDetailsViewModel
 ) {
 
     val context = LocalContext.current
-
-    val viewModel: RecipeDetailsViewModel = viewModel()
 
     val uiState by viewModel.uiState.collectAsState()
 
