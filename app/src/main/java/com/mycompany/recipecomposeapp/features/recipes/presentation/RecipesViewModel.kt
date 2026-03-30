@@ -14,14 +14,14 @@ import kotlinx.coroutines.launch
 import java.net.URLDecoder
 import kotlin.String
 
-class RecipesViewModel(savedState: SavedStateHandle?, repository: RecipesRepository) : ViewModel() {
+class RecipesViewModel(savedState: SavedStateHandle, repository: RecipesRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         RecipesUiState(
-            categoryName = URLDecoder.decode(savedState?.get<String>("categoryTitle") ?: "", "UTF-8")
+            categoryName = URLDecoder.decode(savedState.get<String>("categoryTitle") ?: "", "UTF-8")
                 .uppercase(),
             categoryImageUrl = URLDecoder.decode(
-                savedState?.get<String>("categoryImageUrl") ?: "",
+                savedState.get<String>("categoryImageUrl") ?: "",
                 "UTF-8"
             )
         )
@@ -35,7 +35,7 @@ class RecipesViewModel(savedState: SavedStateHandle?, repository: RecipesReposit
             try {
 
                 val result = repository.getRecipesByCategoryId(
-                    savedState?.get<Int>("categoryId") ?: 0
+                    savedState.get<Int>("categoryId") ?: 0
                 )
                 _uiState.update { state ->
                     state.copy(

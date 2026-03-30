@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 class RecipeDetailsViewModel(
     application: Application,
-    savedStateHandle: SavedStateHandle?,
+    savedStateHandle: SavedStateHandle,
     val repository: RecipesRepository
 ) : AndroidViewModel(application) {
     private val favoriteManager = FavoriteDataStoreManager(application)
@@ -29,7 +29,7 @@ class RecipeDetailsViewModel(
 
 
     val uiState: StateFlow<RecipeDetailsUiState> = _uiState.asStateFlow()
-    private val recipeId: Int = savedStateHandle?.get<Int>("recipeId")
+    private val recipeId: Int = savedStateHandle.get<Int>("recipeId")
         ?: throw IllegalArgumentException("recipeId is required")
 
     init {

@@ -44,20 +44,23 @@ fun RecipesApp(deepLinkIntent: Intent?) {
     val context = LocalContext.current
     val favoriteDataStore = remember { FavoriteDataStoreManager(context) }
 
-    val contentType = "application/json".toMediaType()
-    val json = Json {
-        ignoreUnknownKeys = true
-        coerceInputValues = true
+
+    val repository = remember {
+        val contentType = "application/json".toMediaType()
+        val json = Json {
+            ignoreUnknownKeys = true
+            coerceInputValues = true
+        }
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(NetworkConfig.BASE_URL)
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .build()
+
+        val apiService = retrofit.create(RecipesApiService::class.java)
+
+        RecipesRepositoryImpl(apiService)
     }
-
-    val retrofit = Retrofit.Builder()
-        .baseUrl(NetworkConfig.BASE_URL)
-        .addConverterFactory(json.asConverterFactory(contentType))
-        .build()
-
-    val apiService = retrofit.create(RecipesApiService::class.java)
-
-    val repository = remember {RecipesRepositoryImpl(apiService)}
 
     RecipeComposeAppTheme {
 
@@ -75,7 +78,7 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                     },
                     onCategoriesClick = {
                         navController.navigate("categories") {
-                            popUpTo("categories") { inclusive = false  }
+                            popUpTo("categories") { inclusive = false }
                             launchSingleTop = true
                         }
                     },
@@ -109,7 +112,7 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                 startDestination = "categories"
             ) {
 
-                composable(route = "categories") {backStackEntry ->
+                composable(route = "categories") { backStackEntry ->
 
                     val savedStateHandle = backStackEntry.savedStateHandle
                     CategoriesScreen(
@@ -155,9 +158,7 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                         navArgument("categoryTitle") { type = NavType.StringType },
                         navArgument("categoryImageUrl") { type = NavType.StringType }
                     )
-                ) {backStackEntry ->
-
-                    //val backStackEntry = navController.currentBackStackEntry
+                ) { backStackEntry ->
                     val savedStateHandle = backStackEntry.savedStateHandle
 
                     val viewModel: RecipesViewModel = remember(backStackEntry) {

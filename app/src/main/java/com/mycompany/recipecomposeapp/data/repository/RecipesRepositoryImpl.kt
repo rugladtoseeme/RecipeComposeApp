@@ -7,7 +7,7 @@ import com.mycompany.recipecomposeapp.core.network.api.RecipesApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class RecipesRepositoryImpl(val apiService: RecipesApiService) : RecipesRepository {
+class RecipesRepositoryImpl(private val apiService: RecipesApiService) : RecipesRepository {
 
     override suspend fun getCategories(): List<CategoryDto> {
         return withContext(Dispatchers.IO) {
