@@ -34,7 +34,10 @@ import com.mycompany.recipecomposeapp.features.recipes.ui.RecipesScreen
 import kotlinx.coroutines.delay
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import java.util.concurrent.TimeUnit
 
 const val KEY_RECIPE_OBJECT = "recipe"
 
@@ -44,7 +47,6 @@ fun RecipesApp(deepLinkIntent: Intent?) {
     val context = LocalContext.current
     val favoriteDataStore = remember { FavoriteDataStoreManager(context) }
 
-
     val repository = remember {
         val contentType = "application/json".toMediaType()
         val json = Json {
@@ -52,9 +54,25 @@ fun RecipesApp(deepLinkIntent: Intent?) {
             coerceInputValues = true
         }
 
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
+        }
+
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(loggingInterceptor)
+            .build()
+
         val retrofit = Retrofit.Builder()
             .baseUrl(NetworkConfig.BASE_URL)
             .addConverterFactory(json.asConverterFactory(contentType))
+            .client(okHttpClient)
             .build()
 
         val apiService = retrofit.create(RecipesApiService::class.java)
