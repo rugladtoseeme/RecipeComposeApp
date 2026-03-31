@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mycompany.recipecomposeapp.core.ui.ScreenHeader
 import com.mycompany.recipecomposeapp.features.favorites.presentation.FavoritesViewModel
 import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
@@ -30,10 +29,9 @@ fun FavoritesScreen(
     drawableResId: Int,
     headerText: String,
     modifier: Modifier = Modifier,
+    viewModel: FavoritesViewModel,
     onRecipeClick: (Int, RecipeUiModel) -> Unit
 ) {
-
-    val viewModel: FavoritesViewModel = viewModel()
 
     val uiState by viewModel.uiState.collectAsState()
 
