@@ -20,12 +20,12 @@ fun RecipeImage(
 ) {
     val context = LocalContext.current
     AsyncImage(
-        model = remember {ImageRequest.Builder(context)}
+        model = remember {ImageRequest.Builder(context)
             .data(imageUrl)
             .size(200, 130)
             .scale(Scale.FILL)
             .crossfade(durationMillis = 300)
-            .build(),
+            .build()},
         contentDescription = contentDescription,
         placeholder = painterResource(R.drawable.img_placeholder),
         error = painterResource(R.drawable.img_error),
