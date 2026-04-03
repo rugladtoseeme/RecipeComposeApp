@@ -15,13 +15,11 @@ data class RecipeDto(
     val imageUrl: String
 )
 
-
 fun RecipeDto.toUiModel() = RecipeUiModel(
     id = id,
     title = title,
-    imageUrl = if (imageUrl.startsWith("http")) imageUrl else Constants.ASSETS_URI_PREFIX + imageUrl,
+    imageUrl = if (imageUrl.startsWith("http")) imageUrl else Constants.IMAGES_BASE_URL + imageUrl,
     ingredients = ingredients.map { it.toUiModel() },
     method = method,
     isFavorite = false
 )
-

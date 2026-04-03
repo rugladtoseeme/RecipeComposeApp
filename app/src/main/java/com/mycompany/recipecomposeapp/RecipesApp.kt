@@ -28,6 +28,7 @@ import com.mycompany.recipecomposeapp.data.repository.RecipesRepositoryImpl
 import com.mycompany.recipecomposeapp.features.categories.ui.CategoriesScreen
 import com.mycompany.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
 import com.mycompany.recipecomposeapp.features.details.ui.RecipeDetailsScreen
+import com.mycompany.recipecomposeapp.features.favorites.presentation.FavoritesViewModel
 import com.mycompany.recipecomposeapp.features.favorites.ui.FavoritesScreen
 import com.mycompany.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import com.mycompany.recipecomposeapp.features.recipes.ui.RecipesScreen
@@ -154,11 +155,22 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                     )
                 }
 
-                composable(route = "favorites") {
+                composable(route = "favorites") { backStackEntry ->
+
+                    val application = context.applicationContext as Application
+
+                    val viewModel: FavoritesViewModel = remember(backStackEntry) {
+                        FavoritesViewModel(
+                            repository = repository,
+                            application = application
+                        )
+                    }
+
                     FavoritesScreen(
                         drawableResId = R.drawable.img_favorites_header,
                         headerText = "ИЗБРАННОЕ",
                         modifier = Modifier.padding(paddingValues),
+                        viewModel = viewModel,
                         onRecipeClick = { recipeId, recipe ->
                             navController.currentBackStackEntry?.savedStateHandle?.set(
                                 KEY_RECIPE_OBJECT,
