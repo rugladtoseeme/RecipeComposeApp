@@ -1,6 +1,7 @@
 package com.mycompany.recipecomposeapp.core.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -17,12 +18,12 @@ fun RecipeImage(
     modifier: Modifier,
     contentScale: ContentScale
 ) {
+    val context = LocalContext.current
     AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
+        model = remember {ImageRequest.Builder(context)}
             .data(imageUrl)
             .size(200, 130)
             .scale(Scale.FILL)
-            .crossfade(enable = true)
             .crossfade(durationMillis = 300)
             .build(),
         contentDescription = contentDescription,
