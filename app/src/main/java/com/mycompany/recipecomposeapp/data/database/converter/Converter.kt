@@ -5,7 +5,8 @@ import androidx.room.TypeConverter
 class Converter {
 
     @TypeConverter
-    fun fromString(str: String): List<String> = str.split("|||")
+    fun fromString(str: String): List<String> = if (str.isEmpty()) emptyList()
+    else str.split("|||")
 
     @TypeConverter
     fun fromList(list: List<String>): String = list.joinToString(separator = "|||")
