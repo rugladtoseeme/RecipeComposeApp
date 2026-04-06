@@ -16,12 +16,10 @@ abstract class RecipesDatabase() : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
 
     companion object {
-        fun buildDatabase(context: Context) {
-            Room.databaseBuilder(
-                name = "recipes_database",
-                context = context,
-                klass = RecipesDatabase::class.java
-            ).fallbackToDestructiveMigration().build()
-        }
+        fun buildDatabase(context: Context): RecipesDatabase = Room.databaseBuilder(
+            name = "recipes_database",
+            context = context,
+            klass = RecipesDatabase::class.java
+        ).fallbackToDestructiveMigration().build()
     }
 }
