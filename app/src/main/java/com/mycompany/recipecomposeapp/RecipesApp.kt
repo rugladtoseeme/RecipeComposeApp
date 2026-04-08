@@ -24,6 +24,7 @@ import com.mycompany.recipecomposeapp.core.ui.navigation.BottomNavigation
 import com.mycompany.recipecomposeapp.core.ui.navigation.Destination
 import com.mycompany.recipecomposeapp.core.ui.theme.RecipeComposeAppTheme
 import com.mycompany.recipecomposeapp.core.utils.FavoriteDataStoreManager
+import com.mycompany.recipecomposeapp.data.database.RecipesDatabase
 import com.mycompany.recipecomposeapp.data.repository.RecipesRepositoryImpl
 import com.mycompany.recipecomposeapp.features.categories.ui.CategoriesScreen
 import com.mycompany.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
@@ -78,7 +79,7 @@ fun RecipesApp(deepLinkIntent: Intent?) {
 
         val apiService = retrofit.create(RecipesApiService::class.java)
 
-        RecipesRepositoryImpl(apiService)
+        RecipesRepositoryImpl(apiService, RecipesDatabase.buildDatabase(context))
     }
 
     RecipeComposeAppTheme {

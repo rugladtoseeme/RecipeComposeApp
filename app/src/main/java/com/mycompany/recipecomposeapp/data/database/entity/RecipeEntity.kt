@@ -4,6 +4,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.mycompany.recipecomposeapp.core.model.IngredientDto
+import com.mycompany.recipecomposeapp.core.model.Quantity
+import com.mycompany.recipecomposeapp.core.model.RecipeDto
+import com.mycompany.recipecomposeapp.data.database.converter.Converter
 
 @Entity(
     tableName = "recipes",
@@ -24,4 +28,17 @@ data class RecipeEntity(
     val imageUrl: String,
     val ingredients: String,
     val method: String
+)
+
+fun RecipeEntity.toDto() = RecipeDto(
+    id = id,
+    title = title,
+    ingredients = ingredients.split("|||").map {
+        IngredientDto(
+            name = it,
+            quantity = Quantity.ByTaste
+        )
+    },
+    method = Converter().fromString(method),
+    imageUrl = imageUrl,
 )

@@ -2,12 +2,13 @@ package com.mycompany.recipecomposeapp.data.repository
 
 import com.mycompany.recipecomposeapp.core.model.CategoryDto
 import com.mycompany.recipecomposeapp.core.model.RecipeDto
+import kotlinx.coroutines.flow.Flow
 
 interface RecipesRepository {
 
-    suspend fun getCategories(): List<CategoryDto>
+    fun getCategories(): Flow<List<CategoryDto>>
 
-    suspend fun getRecipesByCategoryId(categoryId: Int): List<RecipeDto>
+    fun getRecipesByCategoryId(categoryId: Int): Flow<List<RecipeDto>>
 
     suspend fun getRecipe(recipeId: Int): RecipeDto?
 }

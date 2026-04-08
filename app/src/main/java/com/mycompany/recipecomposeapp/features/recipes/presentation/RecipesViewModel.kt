@@ -33,16 +33,16 @@ class RecipesViewModel(savedState: SavedStateHandle, repository: RecipesReposito
             _uiState.update { it.copy(isLoading = true, error = null) }
 
             try {
-
-                val result = repository.getRecipesByCategoryId(
+                repository.getRecipesByCategoryId(
                     savedState.get<Int>("categoryId") ?: 0
-                )
-                _uiState.update { state ->
-                    state.copy(
-                        recipes = result.map { it.toUiModel() },
-                        isLoading = false,
-                        emptyRecipeList = result.isEmpty()
-                    )
+                ).collect {
+                    _uiState.update { state ->
+                        state.copy(
+                            recipes = it.map { it.toUiModel() },
+                            isLoading = false,
+                            emptyRecipeList = it.isEmpty()
+                        )
+                    }
                 }
 
             } catch (e: Exception) {
