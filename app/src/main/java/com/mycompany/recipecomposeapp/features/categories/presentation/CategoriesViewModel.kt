@@ -23,13 +23,13 @@ class CategoriesViewModel(
             _uiState.update { it.copy(isLoading = true, error = null) }
 
             try {
-
-                val result = repository.getCategories()
-                _uiState.update { state ->
-                    state.copy(
-                        categories = result.map { it.toUiModel() },
-                        isLoading = false
-                    )
+                repository.getCategories().collect {
+                    _uiState.update { state ->
+                        state.copy(
+                            categories = it.map { it.toUiModel() },
+                            isLoading = false
+                        )
+                    }
                 }
 
             } catch (e: Exception) {

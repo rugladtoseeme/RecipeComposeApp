@@ -1,7 +1,9 @@
 package com.mycompany.recipecomposeapp.core.model
 
-import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.core.ui.Constants
+import com.mycompany.recipecomposeapp.data.database.converter.Converter
+import com.mycompany.recipecomposeapp.data.database.entity.RecipeEntity
+import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
@@ -22,4 +24,13 @@ fun RecipeDto.toUiModel() = RecipeUiModel(
     ingredients = ingredients.map { it.toUiModel() },
     method = method,
     isFavorite = false
+)
+
+fun RecipeDto.toEntity(categoryId: Int) = RecipeEntity(
+    id = this.id,
+    categoryId = categoryId,
+    title = this.title,
+    imageUrl = this.imageUrl,
+    ingredients = Converter().fromList(ingredients.map { it.name }),
+    method = Converter().fromList(method)
 )
