@@ -33,7 +33,7 @@ data class RecipeEntity(
 fun RecipeEntity.toDto() = RecipeDto(
     id = id,
     title = title,
-    ingredients = ingredients.split("|||").map {
+    ingredients = Converter().fromString(ingredients).map {
         IngredientDto(
             name = it,
             quantity = Quantity.ByTaste
