@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.mycompany.recipecomposeapp.core.model.toUiModel
 import com.mycompany.recipecomposeapp.core.utils.FavoriteDataStoreManager
 import com.mycompany.recipecomposeapp.data.repository.RecipesRepository
-import com.mycompany.recipecomposeapp.features.favorites.model.FavoritesUiState
+import com.mycompany.recipecomposeapp.features.favorites.presentation.model.FavoritesUiState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
