@@ -40,57 +40,30 @@ class RecipeDetailsViewModel(
 
             _uiState.update { it.copy(isLoading = true, error = null) }
 
-            val recipe = repository.getRecipe(recipeId)?.toUiModel()
-
-            try {
-                recipe?.let {
-                    val isFavorite = favoriteManager.isFavorite(recipeId)
-                    _uiState.update { state ->
-                        state.copy(
-                            recipe = recipe.copy(isFavorite = isFavorite),
-                            isFavorite = isFavorite,
-                            isLoading = false,
-                            scaledIngredients = recipe.ingredients
+            repository.getRecipe(recipeId).collect { recipe ->
+                try {
+                    recipe?.toUiModel()?.let { recipeUiModel ->
+                        val isFavorite = favoriteManager.isFavorite(recipeId)
+                        _uiState.update { state ->
+                            state.copy(
+                                recipe = recipeUiModel.copy(isFavorite = isFavorite),
+                                isFavorite = isFavorite,
+                                isLoading = false,
+                                scaledIngredients = recipeUiModel.ingredients
+                            )
+                        }
+                    }
+                } catch (e: Exception) {
+                    _uiState.update {
+                        it.copy(
+                            error = e.message ?: "Ошибка загрузки",
+                            isLoading = false
                         )
                     }
-                }
-            } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(
-                        error = e.message ?: "Ошибка загрузки",
-                        isLoading = false
-                    )
                 }
             }
         }
     }
-
-
-//    fun initializeWithRecipe(recipe: RecipeUiModel) {
-//
-//        viewModelScope.launch {
-//
-//            _uiState.update { it.copy(isLoading = true, error = null) }
-//
-//            try {
-//                val isFavorite = favoriteManager.isFavorite(recipe.id)
-//                _uiState.update { state ->
-//                    state.copy(
-//                        recipe = recipe.copy(isFavorite = isFavorite),
-//                        isFavorite = isFavorite,
-//                        isLoading = false
-//                    )
-//                }
-//            } catch (e: Exception) {
-//                _uiState.update {
-//                    it.copy(
-//                        error = e.message ?: "Ошибка загрузки",
-//                        isLoading = false
-//                    )
-//                }
-//            }
-//        }
-//    }
 
     fun toggleFavorite() {
         viewModelScope.launch {
@@ -122,7 +95,7 @@ class RecipeDetailsViewModel(
 
     private fun adjustIngredients(): List<IngredientUiModel> {
         val multiplier =
-            _uiState.value.numberOfPortions.toFloat()/_uiState.value.recipe.servings.toFloat()
+            _uiState.value.numberOfPortions.toFloat() / _uiState.value.recipe.servings.toFloat()
         return _uiState.value.recipe.ingredients.map { ingredient ->
             adjustIngredient(ingredient, multiplier)
         }
