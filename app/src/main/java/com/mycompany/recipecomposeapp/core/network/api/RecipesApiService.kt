@@ -4,6 +4,7 @@ import com.mycompany.recipecomposeapp.core.model.CategoryDto
 import com.mycompany.recipecomposeapp.core.model.RecipeDto
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface RecipesApiService {
 
@@ -15,5 +16,8 @@ interface RecipesApiService {
 
     @GET("recipe/{id}")
     suspend fun getRecipe(@Path("id") recipeId: Int): RecipeDto?
+
+    @GET("recipes/")
+    suspend fun getRecipesByIdsString(@Query("ids") recipeIdsStr: String): List<RecipeDto>
 
 }

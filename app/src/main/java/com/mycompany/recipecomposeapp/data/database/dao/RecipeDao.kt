@@ -23,6 +23,6 @@ interface RecipeDao {
     fun getRecipeById(recipeId: Int): Flow<RecipeEntity?>
 
     @Query("select * from recipes where id IN (:recipeIds)")
-    fun getRecipeByIdsList(recipeIds: List<Int>): Flow<List<RecipeEntity>>
+    fun getRecipesByIdsList(recipeIds: List<Int>): Flow<List<RecipeEntity>>
 
 }

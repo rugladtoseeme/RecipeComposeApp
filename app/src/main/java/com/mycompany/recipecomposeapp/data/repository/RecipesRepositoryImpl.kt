@@ -51,7 +51,7 @@ class RecipesRepositoryImpl(
         return recipeDao.getRecipesByCategoryId(categoryId).map { list -> list.map { it.toDto() } }
     }
 
-    override fun getRecipe(recipeId: Int): Flow<RecipeDto?>{
+    override fun getRecipe(recipeId: Int): Flow<RecipeDto?> {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val fresh = apiService.getRecipe(recipeId)
@@ -66,6 +66,25 @@ class RecipesRepositoryImpl(
             }
         }
         return recipeDao.getRecipeById(recipeId)
-            .map { entity -> entity?.toDto()}
+            .map { entity -> entity?.toDto() }
     }
+
+    override fun getRecipesByIdsList(recipeIds: List<Int>): Flow<List<RecipeDto>> {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val fresh = apiService.getRecipesByIdsString(recipeIds.joinToString(","))
+
+                Log.d("RecipesRepositoryImpl", "Детали рецепта получены из API")
+            } catch (e: Exception) {
+                Log.e(
+                    "RecipesRepositoryImpl",
+                    "Не удалось получить рецепты по списку id ${recipeIds.joinToString(", ")}}",
+                    e
+                )
+            }
+        }
+        return recipeDao.getRecipesByIdsList(recipeIds)
+            .map { entity -> entity.map { it.toDto() } }
+    }
+
 }
