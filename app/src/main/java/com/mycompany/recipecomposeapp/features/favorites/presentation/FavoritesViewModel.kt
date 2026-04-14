@@ -3,10 +3,12 @@ package com.mycompany.recipecomposeapp.features.favorites.presentation
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.mycompany.recipecomposeapp.core.model.RecipeDto
 import com.mycompany.recipecomposeapp.core.model.toUiModel
 import com.mycompany.recipecomposeapp.core.utils.FavoriteDataStoreManager
 import com.mycompany.recipecomposeapp.data.repository.RecipesRepository
-import com.mycompany.recipecomposeapp.features.favorites.model.FavoritesUiState
+import com.mycompany.recipecomposeapp.features.favorites.presentation.model.FavoritesUiState
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -19,7 +21,7 @@ class FavoritesViewModel(application: Application, private val repository: Recip
     AndroidViewModel(application) {
     private val favoriteManager = FavoriteDataStoreManager(application)
     private val _uiState: StateFlow<FavoritesUiState> =
-        favoriteRecipesFlow().map { FavoritesUiState(it) }
+        favoriteRecipesFlow().map { FavoritesUiState(it.map { it.toUiModel() }) }
             .stateIn(
                 viewModelScope,
                 initialValue = FavoritesUiState(emptyList()),
@@ -28,13 +30,13 @@ class FavoritesViewModel(application: Application, private val repository: Recip
 
     val uiState = _uiState
 
-    private fun favoriteRecipesFlow() =
+    private fun favoriteRecipesFlow(): Flow<List<RecipeDto>> =
         favoriteManager.getFavoriteIdsFlow().flatMapLatest { ids ->
             if (ids.isEmpty()) flowOf(emptyList())
             else {
-                val flows = ids.map { repository.getRecipe(it.toInt()) }
+                val flows = repository.getRecipesByIdsList(ids.toList().map { it.toInt() })
                 combine(flows) { recipes ->
-                    recipes.filterNotNull().map { it.toUiModel() }
+                     recipes.flatMap { it.toList() }
                 }
             }
         }
