@@ -2,9 +2,11 @@ package com.mycompany.recipecomposeapp.di
 
 import android.app.Application
 
-class RecipeApplication: Application() {
+class RecipeApplication : Application() {
 
     lateinit var appContainer: AppContainer
+        private set
+
 
     override fun onCreate() {
         super.onCreate()
