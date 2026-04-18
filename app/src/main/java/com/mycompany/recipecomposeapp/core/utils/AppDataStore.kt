@@ -8,9 +8,12 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+import javax.inject.Singleton
 
 object PreferencesKeys {
     val FAVORITE_RECIPE_IDS = stringSetPreferencesKey(FAVOURITE_RECIPE_IDS_KEY)
@@ -29,7 +32,8 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
     }
 )
 
-class FavoriteDataStoreManager(val context: Context) {
+@Singleton
+class FavoriteDataStoreManager @Inject constructor(@ApplicationContext val context: Context) {
     val preferencesFlow: Flow<Preferences> = context.dataStore.data
 
     suspend fun isFavorite(recipeId: Int?): Boolean {
