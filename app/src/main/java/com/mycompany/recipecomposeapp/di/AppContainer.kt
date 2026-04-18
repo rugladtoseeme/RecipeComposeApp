@@ -16,12 +16,12 @@ import java.util.concurrent.TimeUnit
 
 class AppContainer(context: Context) {
     private val contentType = "application/json".toMediaType()
-    val json: Json = Json {
+    private val json: Json = Json {
         ignoreUnknownKeys = true
         coerceInputValues = true
     }
 
-    val loggingInterceptor = HttpLoggingInterceptor().apply {
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor.Level.BODY
         } else {
@@ -29,14 +29,14 @@ class AppContainer(context: Context) {
         }
     }
 
-    val okHttpClient = OkHttpClient.Builder()
+    private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
         .writeTimeout(30, TimeUnit.SECONDS)
         .addInterceptor(loggingInterceptor)
         .build()
 
-    val retrofit = Retrofit.Builder()
+    private val retrofit = Retrofit.Builder()
         .baseUrl(NetworkConfig.BASE_URL)
         .addConverterFactory(json.asConverterFactory(contentType))
         .client(okHttpClient)

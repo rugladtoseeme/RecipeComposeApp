@@ -119,10 +119,12 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                     val appContainer =
                         (LocalContext.current.applicationContext as RecipeApplication).appContainer
 
-                    val viewModel = FavoritesViewModelFactory(
-                        application,
-                        appContainer.recipesRepository
-                    ).create()
+                    val viewModel = remember {
+                        FavoritesViewModelFactory(
+                            application,
+                            appContainer.recipesRepository
+                        ).create()
+                    }
 
                     FavoritesScreen(
                         drawableResId = R.drawable.img_favorites_header,
@@ -152,10 +154,12 @@ fun RecipesApp(deepLinkIntent: Intent?) {
                     val appContainer =
                         (LocalContext.current.applicationContext as RecipeApplication).appContainer
 
-                    val viewModel = RecipesViewModelFactory(
-                        savedStateHandle = savedStateHandle,
-                        repository = appContainer.recipesRepository
-                    ).create()
+                    val viewModel = remember(backStackEntry) {
+                        RecipesViewModelFactory(
+                            savedStateHandle = savedStateHandle,
+                            repository = appContainer.recipesRepository
+                        ).create()
+                    }
 
                     RecipesScreen(
                         viewModel = viewModel,
