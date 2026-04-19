@@ -6,15 +6,23 @@ import com.mycompany.recipecomposeapp.BuildConfig
 import com.mycompany.recipecomposeapp.core.network.NetworkConfig
 import com.mycompany.recipecomposeapp.core.network.api.RecipesApiService
 import com.mycompany.recipecomposeapp.data.database.RecipesDatabase
-import com.mycompany.recipecomposeapp.data.repository.RecipesRepositoryImpl
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
-class AppContainer(context: Context) {
+@Module
+@InstallIn(SingletonComponent::class)
+class AppModule {
+
     private val contentType = "application/json".toMediaType()
     private val json: Json = Json {
         ignoreUnknownKeys = true
@@ -42,8 +50,11 @@ class AppContainer(context: Context) {
         .client(okHttpClient)
         .build()
 
-    private val apiService = retrofit.create(RecipesApiService::class.java)
+    @Provides
+    @Singleton
+    fun provideRecipeApiService() = retrofit.create(RecipesApiService::class.java)
 
-    private val recipesDb = RecipesDatabase.buildDatabase(context)
-    val recipesRepository = RecipesRepositoryImpl(apiService, recipesDb)
+    @Provides
+    @Singleton
+    fun provideRecipeDatabase(@ApplicationContext context: Context) = RecipesDatabase.buildDatabase(context)
 }

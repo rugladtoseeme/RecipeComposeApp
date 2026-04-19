@@ -15,17 +15,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.mycompany.recipecomposeapp.R
 import com.mycompany.recipecomposeapp.core.ui.ScreenHeader
-import com.mycompany.recipecomposeapp.di.CategoriesViewModelFactory
-import com.mycompany.recipecomposeapp.di.RecipeApplication
 import com.mycompany.recipecomposeapp.features.categories.presentation.CategoriesViewModel
+
 
 @Composable
 fun CategoriesScreen(
@@ -35,11 +33,7 @@ fun CategoriesScreen(
     modifier: Modifier = Modifier,
 ) {
 
-    val appContainer = (LocalContext.current.applicationContext as RecipeApplication).appContainer
-
-    val viewModel: CategoriesViewModel = remember {
-        CategoriesViewModelFactory(appContainer.recipesRepository).create()
-    }
+    val viewModel: CategoriesViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
     Column(modifier = modifier.fillMaxWidth()) {

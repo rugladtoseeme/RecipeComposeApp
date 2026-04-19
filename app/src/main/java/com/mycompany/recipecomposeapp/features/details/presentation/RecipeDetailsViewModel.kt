@@ -1,8 +1,7 @@
 package com.mycompany.recipecomposeapp.features.details.presentation
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mycompany.recipecomposeapp.core.model.Quantity
 import com.mycompany.recipecomposeapp.core.model.toUiModel
@@ -10,18 +9,20 @@ import com.mycompany.recipecomposeapp.core.utils.FavoriteDataStoreManager
 import com.mycompany.recipecomposeapp.data.repository.RecipesRepository
 import com.mycompany.recipecomposeapp.features.details.presentation.model.RecipeDetailsUiState
 import com.mycompany.recipecomposeapp.features.recipes.presentation.model.IngredientUiModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RecipeDetailsViewModel(
-    application: Application,
+@HiltViewModel
+class RecipeDetailsViewModel @Inject constructor(
+    private val favoriteManager: FavoriteDataStoreManager,
     savedStateHandle: SavedStateHandle,
     val repository: RecipesRepository
-) : AndroidViewModel(application) {
-    private val favoriteManager = FavoriteDataStoreManager(application)
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         RecipeDetailsUiState()

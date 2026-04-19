@@ -6,15 +6,18 @@ import androidx.lifecycle.viewModelScope
 import com.mycompany.recipecomposeapp.core.model.toUiModel
 import com.mycompany.recipecomposeapp.data.repository.RecipesRepository
 import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipesUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.net.URLDecoder
+import javax.inject.Inject
 import kotlin.String
 
-class RecipesViewModel(savedState: SavedStateHandle, repository: RecipesRepository) : ViewModel() {
+@HiltViewModel
+class RecipesViewModel @Inject constructor(savedState: SavedStateHandle, repository: RecipesRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         RecipesUiState(
