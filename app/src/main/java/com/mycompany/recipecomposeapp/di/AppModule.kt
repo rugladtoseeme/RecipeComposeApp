@@ -9,6 +9,7 @@ import com.mycompany.recipecomposeapp.data.database.RecipesDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -55,5 +56,5 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideRecipeDatabase(context: Context) = RecipesDatabase.buildDatabase(context)
+    fun provideRecipeDatabase(@ApplicationContext context: Context) = RecipesDatabase.buildDatabase(context)
 }
