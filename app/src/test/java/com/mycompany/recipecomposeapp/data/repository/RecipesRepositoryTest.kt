@@ -19,6 +19,7 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import java.io.IOException
 
 class RecipesRepositoryTest {
 
@@ -77,7 +78,7 @@ class RecipesRepositoryTest {
                 )
             )
         )
-        coEvery { apiService.getCategories() } throws Exception()
+        coEvery { apiService.getCategories() } throws IOException()
         coEvery { categoryDao.insertCategories(any()) } just Runs
 
         repository.getCategories().test {

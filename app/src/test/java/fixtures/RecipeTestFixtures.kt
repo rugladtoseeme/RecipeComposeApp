@@ -4,7 +4,7 @@ import com.mycompany.recipecomposeapp.core.model.IngredientDto
 import com.mycompany.recipecomposeapp.core.model.Quantity
 import com.mycompany.recipecomposeapp.core.model.RecipeDto
 
-class RecipeTestFixtures {
+object RecipeTestFixtures {
 
     val ingredientQuantity = "200"
     val ingredientUnitOfMeasure = "г"

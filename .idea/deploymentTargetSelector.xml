@@ -8,12 +8,6 @@
       <SelectionState runConfigName="RecipesAppPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="MainActivity (1)">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="CategoryPreview">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="RecipeHeaderPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>

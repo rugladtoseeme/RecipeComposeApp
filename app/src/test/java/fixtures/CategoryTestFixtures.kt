@@ -2,7 +2,7 @@ package fixtures
 
 import com.mycompany.recipecomposeapp.core.model.CategoryDto
 
-class CategoryTestFixtures {
+object CategoryTestFixtures {
 
     fun createCategoryDto(
         id: Int = 1,
