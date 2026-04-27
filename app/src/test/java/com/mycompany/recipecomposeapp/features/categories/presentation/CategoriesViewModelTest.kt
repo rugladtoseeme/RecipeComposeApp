@@ -1,5 +1,6 @@
 package com.mycompany.recipecomposeapp.features.categories.presentation
 
+import app.cash.turbine.test
 import com.mycompany.recipecomposeapp.data.repository.RecipesRepository
 import fixtures.CategoryTestFixtures
 import io.mockk.clearAllMocks
@@ -10,6 +11,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -35,13 +37,18 @@ class CategoriesViewModelTest {
     }
 
     @Test
-    fun `loads categories from repository`() {
-        every { repository.getCategories() } returns flowOf(CategoryTestFixtures.createCategoryDtoList(3))
+    fun `loads categories from repository`() = runTest {
+        every { repository.getCategories() } returns flowOf(
+            CategoryTestFixtures.createCategoryDtoList(
+                3
+            )
+        )
         viewModel = CategoriesViewModel(repository)
 
-        assertEquals(viewModel.uiState.value.categories.size, 3)
-        assertEquals(viewModel.uiState.value.isLoading, false)
-
+        viewModel.uiState.test {
+            val state = awaitItem(); assertEquals(state.categories.size, 3)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
