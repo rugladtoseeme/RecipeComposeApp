@@ -47,6 +47,7 @@ class CategoriesViewModelTest {
 
         viewModel.uiState.test {
             val state = awaitItem(); assertEquals(state.categories.size, 3)
+            assertEquals(state.isLoading, false)
             cancelAndIgnoreRemainingEvents()
         }
     }
