@@ -17,12 +17,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mycompany.recipecomposeapp.R
 import com.mycompany.recipecomposeapp.core.ui.ScreenHeader
 import com.mycompany.recipecomposeapp.features.categories.presentation.CategoriesViewModel
+import com.mycompany.recipecomposeapp.features.categories.presentation.model.CategoriesUiState
 
 
 @Composable
@@ -82,6 +84,36 @@ fun CategoriesScreen(
         }
     }
 }
+
+@Composable
+fun CategoriesContent(
+    uiState: CategoriesUiState,
+    onCategoryClick: (Int, String, String) -> Unit
+) {
+    when {
+        uiState.isLoading -> CircularProgressIndicator(modifier = Modifier.testTag("loading_indicator"))
+        uiState.error != null -> Text(
+            text = uiState.error,
+            modifier = Modifier.testTag("error_message")
+        )
+
+        else -> LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+            items(uiState.categories) { category ->
+                CategoryItem(
+                    categoryUiModel = category,
+                    onClick = {
+                        onCategoryClick(
+                            category.id,
+                            category.title,
+                            category.imageUrl
+                        )
+                    },
+                )
+            }
+        }
+    }
+}
+
 
 
 @Composable
