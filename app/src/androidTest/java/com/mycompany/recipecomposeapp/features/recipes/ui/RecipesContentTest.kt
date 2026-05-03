@@ -1,56 +1,22 @@
 package com.mycompany.recipecomposeapp.features.recipes.ui
 
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipesUiState
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
 class RecipesContentTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
-
-    @Composable
-    fun RecipesContent(
-        uiState: RecipesUiState,
-        onRecipeClick: (Int, RecipeUiModel) -> Unit
-    ) {
-        when {
-            uiState.isLoading -> CircularProgressIndicator(modifier = Modifier.testTag("loading_indicator"))
-            uiState.error != null -> Text(
-                text = uiState.error,
-                modifier = Modifier.testTag("error_message")
-            )
-
-            uiState.emptyRecipeList -> Text(
-                text = "В данной категории нет ни одного рецепта",
-                modifier = Modifier.testTag("empty_state")
-            )
-
-            else -> LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-                items(uiState.recipes) { recipe ->
-                    RecipeItem(
-                        recipe = recipe,
-                        onRecipeClick = onRecipeClick,
-                        modifier = Modifier.testTag("Карбонара")
-                    )
-                }
-            }
-        }
-    }
 
     @Test
     fun showsLoadingState() {
