@@ -90,6 +90,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.junit.ktx)
+    implementation(libs.androidx.compose.remote.creation.core)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.room.compiler)
@@ -105,6 +106,9 @@ dependencies {
     androidTestImplementation(libs.turbine)
     kspAndroidTest(libs.hilt.compiler)
     androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.kaspresso)
+    androidTestImplementation(libs.kaspresso.compose)
+    androidTestImplementation(libs.hamcrest)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.runner)

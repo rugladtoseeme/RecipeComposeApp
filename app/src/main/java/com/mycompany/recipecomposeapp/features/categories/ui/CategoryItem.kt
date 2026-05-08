@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.mycompany.recipecomposeapp.core.ui.RecipeImage
 import com.mycompany.recipecomposeapp.features.categories.presentation.model.CategoryUiModel
@@ -25,7 +26,8 @@ fun CategoryItem(onClick: () -> Unit, categoryUiModel: CategoryUiModel) {
         modifier = Modifier
             .height(height = 220.dp)
             .width(width = 156.dp)
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
+            .testTag("category_item"),
         shape = RoundedCornerShape(size = 8.dp)
     ) {
         Column (verticalArrangement = Arrangement.SpaceBetween){

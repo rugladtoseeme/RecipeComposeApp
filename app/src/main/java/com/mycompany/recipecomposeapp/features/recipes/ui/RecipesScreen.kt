@@ -35,7 +35,11 @@ fun RecipesScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("recipes_screen")
+    ) {
         ScreenHeader(
             imageUrl = uiState.categoryImageUrl,
             uiState.categoryName
@@ -46,6 +50,7 @@ fun RecipesScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.CenterHorizontally)
+                    .testTag("loading_indicator")
             )
         } else if (uiState.error != null) {
             Spacer(Modifier.weight(1f))
@@ -65,6 +70,7 @@ fun RecipesScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.CenterHorizontally)
+                    .testTag("empty_state")
             )
             Spacer(Modifier.weight(1f))
         } else {
