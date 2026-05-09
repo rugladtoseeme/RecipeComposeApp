@@ -10,6 +10,6 @@ class RecipesComposeScreen(semanticsProvider: SemanticsNodeInteractionsProvider)
         viewBuilderAction = { hasTestTag("recipes_screen") }  // корень экрана
     ) {
     val loadingIndicator: KNode = child { hasTestTag("loading_indicator") }
-    val categoriesGrid: KNode = child { hasTestTag("empty_state") }
-    val categoryItem: KNode = child { hasTestTag("recipe_item") }
+    val emptyState: KNode = child { hasTestTag("empty_state") }
+    val recipeItem: KNode = child { hasTestTag("recipe_item") }
 }

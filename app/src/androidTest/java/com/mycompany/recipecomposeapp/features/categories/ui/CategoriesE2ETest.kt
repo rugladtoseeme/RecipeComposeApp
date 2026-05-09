@@ -1,7 +1,6 @@
 package com.mycompany.recipecomposeapp.features.categories.ui
 
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
@@ -33,7 +32,7 @@ class CategoriesE2ETest : TestCase(
     fun clickingCategoryOpensRecipesScreen() = run {
         step("Дождаться загрузки категорий") {
             onComposeScreen<CategoriesComposeScreen>(composeTestRule) {
-                categoriesGrid { isDisplayed() }
+                categoriesGrid { assertIsDisplayed() }
             }
         }
         step("Нажать на первую категорию") {
@@ -44,7 +43,7 @@ class CategoriesE2ETest : TestCase(
         step("Проверить что открылся экран рецептов") {
             onComposeScreen<RecipesComposeScreen>(composeTestRule) {
                 assertIsDisplayed()
-                loadingIndicator { isDisplayed() }
+                loadingIndicator { assertIsDisplayed() }
             }
         }
     }
