@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.mycompany.recipecomposeapp.core.ui.RecipeImage
 import com.mycompany.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
@@ -27,6 +28,7 @@ fun RecipeItem(
         modifier = modifier
             .height(height = 132.dp)
             .fillMaxWidth()
+            .testTag("recipe_item")
             .clickable(onClick = { onRecipeClick(recipe.id, recipe) }),
         shape = RoundedCornerShape(size = 8.dp)
     ) {

@@ -5,19 +5,13 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="getRecipesByCategoryReturnsCorrectItems()">
+      <SelectionState runConfigName="clickingCategoryOpensRecipesScreen()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="savesDataToCacheAfterSuccessfulApiCall()">
+      <SelectionState runConfigName="categoriesScreenLoadsContent()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="savesDataToCacheAfterSuccessfulApiCall() (1)">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="returnsCachedDataWhenApiFails()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="FavoriteDataStoreTest">
+      <SelectionState runConfigName="CategoriesE2ETest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

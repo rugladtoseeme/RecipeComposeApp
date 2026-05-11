@@ -38,7 +38,9 @@ fun CategoriesScreen(
     val viewModel: CategoriesViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = modifier
+        .fillMaxWidth()
+        .testTag("categories_screen")) {
         ScreenHeader(
             drawableResId,
             headerText
@@ -48,6 +50,7 @@ fun CategoriesScreen(
             CircularProgressIndicator(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .testTag("loading_indicator")
                     .wrapContentWidth(Alignment.CenterHorizontally)
             )
         } else if (uiState.error != null) {
@@ -62,6 +65,7 @@ fun CategoriesScreen(
             Spacer(Modifier.weight(1f))
         } else {
             LazyVerticalGrid(
+                modifier  = Modifier.testTag("categories_grid"),
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -113,7 +117,6 @@ fun CategoriesContent(
         }
     }
 }
-
 
 
 @Composable
