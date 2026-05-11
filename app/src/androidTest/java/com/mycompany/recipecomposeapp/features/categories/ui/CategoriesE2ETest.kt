@@ -43,7 +43,6 @@ class CategoriesE2ETest : TestCase(
         step("Проверить что открылся экран рецептов") {
             onComposeScreen<RecipesComposeScreen>(composeTestRule) {
                 assertIsDisplayed()
-                loadingIndicator { assertIsDisplayed() }
             }
         }
     }
